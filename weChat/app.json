@@ -1,0 +1,51 @@
+{
+  "pages":[
+    "pages/index/index",
+    "pages/demo/demo",
+    "pages/logs/logs",
+    "pages/user/user",
+    "pages/book/book",
+    "pages/discover/discover",
+    "pages/me/me"
+  ],
+  "tabBar": {
+    "color": "#a9b7b7",
+    "selectedColor": "#1afa29",
+    "borderStyle": "black",
+    "backgroundColor": "#fff",
+    "list": [
+      {
+        "selectedIconPath": "images/tar-bar-chat-active.png",
+        "iconPath": "images/tar-bar-chat.png",
+        "pagePath": "pages/index/index",
+        "text": "微信"
+      },
+      {
+        "selectedIconPath": "images/tar-bar-book-active.png",
+        "iconPath": "images/tar-bar-book.png",
+        "pagePath": "pages/book/book",
+        "text": "通讯录"
+      },
+      {
+        "selectedIconPath": "images/tar-bar-discover-active.png",
+        "iconPath": "images/tar-bar-discover.png",
+        "pagePath": "pages/discover/discover",
+        "text": "发现"
+      },
+      {
+        "selectedIconPath": "images/tar-bar-me-active.png",
+        "iconPath": "images/tar-bar-me.png",
+        "pagePath": "pages/me/me",
+        "text": "我"
+      }
+    ]
+  },
+  
+  "window":{
+    "backgroundTextStyle":"light",
+    "navigationBarBackgroundColor": "#000",
+    "navigationBarTitleText": "在这里设置小程序的标题",
+    "navigationBarTextStyle":"#fff",
+    "backgroundColor": "white"
+  }
+}

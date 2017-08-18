@@ -1,0 +1,37 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/about/about",
+    "pages/share/share",
+    "pages/load/load"
+  ],
+  "window":{
+    "navigationBarBackgroundColor": "#3D3527",
+    "navigationBarTitleText": "Can I use 简化版",
+    "navigationBarTextStyle":"#fff",
+    "backgroundTextStyle":"#fff",
+    "bacgkroundColor": "#3D3527"
+  },
+  "networkTimeout": {
+    "request": 30000
+  },
+  "tabBar": {
+    "borderStyle": "white",
+    "backgroundColor": "#3D3527",
+    "color": "#fff",
+    "selectedColor": "#DB9E00",
+    "list": [
+    {
+      "pagePath": "pages/about/about",
+      "text": "关于",
+      "iconPath": "images/ico_about.png",
+      "selectedIconPath": "images/ico_about_hover.png"
+    },
+    {
+      "pagePath": "pages/index/index",
+      "text": "兼容列表",
+      "iconPath": "images/ico_list.png",
+      "selectedIconPath": "images/ico_list_hover.png"
+    }]
+  }
+}

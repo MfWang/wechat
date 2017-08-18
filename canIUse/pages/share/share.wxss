@@ -1,0 +1,19 @@
+@import "/pages/index/index.wxss"
+
+page {
+	padding-bottom: 20rpx;
+}
+.updata_time {
+	margin-bottom: 20rpx;
+}
+.updataBtn {
+	display: block;
+	padding: 20rpx;
+	margin:0 20rpx;
+	text-align: center;
+	line-height: 32rpx;
+	font-size: 32rpx;
+	border-radius: 8rpx;
+	color: #fff;
+	background-color: #DB5600;
+}

@@ -1,0 +1,10 @@
+<view class="box">
+	<view class="shape-arc_01"></view>
+	<view class="shape-arc_02"></view>
+	<view class="shape-arc_03"></view>
+</view>
+<view class="box1">
+	<view class="shape-arc_01"></view>
+	<view class="shape-arc_02"></view>
+	<view class="shape-arc_03"></view>
+</view>

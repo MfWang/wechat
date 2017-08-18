@@ -1,0 +1,23 @@
+<!--index.wxml-->
+<view class="container">
+  <swiper indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}"
+    style="height: 1000rpx"
+  >
+    <block wx:for="{{banner}}" wx:for-item="item">
+      <swiper-item class="banner-item">
+        <image src="{{item.imageUrl}}" class="slide-image"/>
+        <text class="banner-title" style=" color: {{item.titleColor ? item.titleColor : 'rgba(0,0,0,0.87)' }}">{{item.title}}</text>
+        <text class="banner-subtitle" style="color: {{ item.subTitleColor ? item.subTitleColor : 'rgba(0,0,0,0.54)' }}">{{item.subTitle}}</text>
+      </swiper-item>
+    </block>
+  </swiper>
+  <view class="showcase">
+     <block wx:for="{{showcase}}" wx:for-item="item">
+      <view class="showcase-item">
+        <image src="{{item.imageUrl}}" class="showcase-img"/>
+        <text class="showcase-title" style=" color: {{item.titleColor ? item.titleColor : 'rgba(0,0,0,0.87)' }}">{{item.title}}</text>
+        <text class="showcase-subtitle" style="color: {{ item.subTitleColor ? item.subTitleColor : 'rgba(0,0,0,0.54)' }}">{{item.subTitle}}</text>
+      </view>
+    </block>
+  </view>
+</view>

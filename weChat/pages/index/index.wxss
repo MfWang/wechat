@@ -1,0 +1,51 @@
+/**index.wxss**/
+.container{
+  height: 100%;
+}
+.slide-image{
+  width: 100%;
+  height: 1000rpx;
+}
+.banner-item{
+  position: relative;
+}
+.banner-title{
+  width: 100%;
+  position: absolute;
+  text-align: center;
+  top: 20rpx;
+  left: 0;
+}
+.banner-subtitle{
+  width: 100%;
+  text-align: center;
+  position: absolute;
+  top: 100rpx;
+  left: 0;
+}
+.showcase{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.showcase-item{
+  width: 100%;
+  position: relative;
+}
+.showcase-img{
+  width: 100%;
+}
+.showcase-title{
+  width: 100%;
+  position: absolute;
+  text-align: center;
+  top: 20rpx;
+  left: 0;
+}
+.showcase-subtitle{
+  width: 100%;
+  text-align: center;
+  position: absolute;
+  top: 100rpx;
+  left: 0;
+}

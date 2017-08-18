@@ -1,0 +1,23 @@
+<view class="title"><text>与好友分享的方式</text></view>
+<view class="intro">
+	<text>通过搜索有关兼容性的数据后，可<text>长按</text>某个你所需要的卡片<text> 3 秒后放开</text>，将会弹出提示，点<text>确定</text>之后进入独立卡片的页面既然点右上角的 <text>...</text> 可在好友之间进行分享转发。</text>
+</view>
+
+<view class="title"><text>介绍说明</text></view>
+<view class="intro">
+	<text>所有数据信息来自<text>https://github.com/Fyrd/caniuse</text>，该小程序主要的是为了便于在微信上与同行分享 CSS 相关属性的兼容性而使用。该 json 数据使用的是 <text>CC BY 4.0 license</text>，小程序中并未对数据所任何改动，而是直接引用。</text>
+	<text>该 json 文件虽然有 <text>1.5MB</text> 左右，经过 github 服务器的 gzip 压缩后，数据通信是 <text>200K</text> 左右。</text>
+	<text>Can I use 简化版只是将数据进行了简单的重组展现，如要获得更好的体验效果以及更全面的兼容信息，还请直接访问 <text>https://caniuse.com</text> 网站。</text>
+	<text>小程序中的表情图片来源于 <text>SuperMii</text> 这个 app 应用，也叫酷脸，网址是： <text>http://www.supermii.cn</text> 一款捏脸的 app。</text>
+	<text>小程序作者： <text>林小志</text></text>
+	<text>个人公众号： <text>闲谈 CSS 那些事儿</text>（<text>talk-css</text>）</text>
+	<text>小程序源码： <text>https://github.com/linxz/caniuse</text></text>
+</view>
+
+<view class="title"><text>更新说明</text></view>
+<view class="intro">
+	<text>由于请求 github 上的数据可能会比较缓慢，所以，如果有需要更新数据的朋友请采用<text>手动更新</text>。基本上每次更新的内容并不多，时间大概会是在一周左右会更新一次。</text>
+	<text><text>初次加载</text>必然要请求缓存，<text>清空过微信缓存</text>后再打开小程序也必然会请求缓存。</text>
+	<view class="updata_time">{{ _timeStamp }}</view>
+	<text bindtap="updata" class="updataBtn">要更新数据就点这里</text>
+</view>

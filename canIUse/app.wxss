@@ -1,0 +1,13 @@
+page {
+	background-color: #3D3527;
+    background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiP…Igd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmFkKSIgLz48L3N2Zz4g),url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiP…dpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JhZCkiIC8+PC9zdmc+IA==),#3D3527;
+  background: linear-gradient(-45deg, rgba(0,0,0,0) 50%,rgba(255,255,255,0.02) 50%,rgba(255,255,255,0.01)),-webkit-gradient(linear, 0% 50%, 100% 50%, color-stop(90%, rgba(0,0,0,0)),color-stop(90%, rgba(255,255,255,0.03))),#3D3527;
+  background: -moz-linear-gradient(135deg, rgba(0,0,0,0) 50%,rgba(255,255,255,0.02) 50%,rgba(255,255,255,0.01)),-moz-linear-gradient(left, rgba(0,0,0,0) 90%,rgba(255,255,255,0.03) 90%),#3D3527;
+  background: -webkit-linear-gradient(135deg, rgba(0,0,0,0) 50%,rgba(255,255,255,0.02) 50%,rgba(255,255,255,0.01)),-webkit-linear-gradient(left, rgba(0,0,0,0) 90%,rgba(255,255,255,0.03) 90%),#3D3527;
+  background: linear-gradient(-45deg, rgba(0,0,0,0) 50%,rgba(255,255,255,0.02) 50%,rgba(255,255,255,0.01)),linear-gradient(to right, rgba(0,0,0,0) 90%,rgba(255,255,255,0.03) 90%),#3D3527;
+  background-size: cover;
+  font-family: Arial, Roboto, 'Droid Sans', 'Hiragino Sans GB', 'Microsoft YaHei', 'Simsun', STXihei, 'sans-serif';
+  font-size: 40rpx;
+  color: #fff;
+}
+

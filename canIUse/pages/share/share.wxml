@@ -1,0 +1,30 @@
+<view class="container">
+	<view class="updata_time">{{ _timeStamp }}</view>
+
+	<view class="colorSimple">
+		<text class="green">支持</text> <text class="yellow">部分支持</text> <text class="red">不支持</text> <text class="unknow">未知</text>
+	</view>
+
+	<view class="caniuse_list">
+		<block wx:for="{{ getCSS3 }}" wx:key="attr_list" wx:for-item="attr_list">
+			<view class="item_box" id="{{ index }}" bindtouchstart="touchStart"  bindtouchend="touchEnd" bindtap="longTap">
+				<block wx:for="{{ attr_list }}" wx:key="attr_list" wx:for-item="attr_description">
+					<view wx:if="{{ index == 'title' }}" class="attrTitle">{{ attr_description }}</view>
+					<view wx:if="{{ index == 'description' }}" class="attrDescription">{{ attr_description }}</view>
+					<view wx:if="{{ index == 'usage_perc_a' }}" class="attrUsageA">{{ attr_description }}</view>
+					<view wx:if="{{ index == 'usage_perc_y' }}" class="attrUsageY">{{ attr_description }}</view>
+					<view wx:if="{{ index == 'browser' }}" class="browser_list">
+						<view wx:for="{{ attr_description }}" wx:key="browserList" wx:for-item="browserInfo" class="verList">
+							<view class="version">{{ index }}</view>
+							<block wx:for="{{ browserInfo }}" wx:key="browserList" wx:for-item="browserVer">
+								<view class="version {{ index }}" wx:if="{{ browserVer != 0 }}">{{ browserVer }}</view>
+							</block>
+						</view>
+					</view>
+				</block>
+			</view>
+		</block>
+	</view>
+</view>
+
+<text bindtap="gotoHome" class="updataBtn" style="display: {{ _goHomeBtn }}">回首页查属性</text>

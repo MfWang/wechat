@@ -1,0 +1,300 @@
+.updata_time {
+	height: 42rpx;
+	overflow: hidden;
+	line-height: 46rpx;
+	padding: 0 20rpx;
+	font-size: 24rpx;
+	background-color: rgba(255,255,255,0.1);
+}
+.search_input {
+	display: flex;
+	height: 50rpx;
+	align-content: center;
+	padding: 20rpx;
+	margin: 20rpx;
+	font-size: 36rpx;
+	border-radius: 6rpx;
+	color: #fff;
+	background-color: #DB5600;
+}
+.hideInput {
+	position: absolute;
+	top: 50rpx;
+	right: 0;
+}
+.search_input input {
+	flex: 1 0 60%;
+	padding-left: 20rpx;
+	border-bottom: 1px solid #fff;
+}
+.supportList {
+	margin: 20rpx;
+	padding: 20rpx;
+	font-size: 28rpx;
+	border-radius: 6rpx;
+	color: #666;
+	background-color: #f2e8d5;
+}
+.supportList .css2Title {
+	display: block;
+	padding-bottom: 5rpx;
+	font-size: 32rpx;
+	color: #333;
+}
+.supportList .css2Descrption {
+	padding-bottom: 10rpx;
+}
+.supportList .css2Descrption text {
+	color: green;
+}
+.supportList .css2Item {
+	position: relative;
+	padding-left: 20rpx;
+	font-size: 30rpx;
+	color: green;
+	border-left: 2px solid green;
+}
+.browser_list {
+	display: flex;
+	flex-wrap: wrap;
+}
+.item_box {
+	overflow: hidden;
+	margin: 20rpx;
+	padding: 20rpx;
+	font-size: 28rpx;
+	border-radius: 6rpx;
+	color: #666;
+	background-color: #f2e8d5;
+}
+.attrTitle {
+	padding-bottom: 15rpx;
+	font-size: 36rpx;
+	font-weight: bold;
+	color: #333;
+}
+.attrDescription {
+	display: block;
+	padding-bottom: 15rpx;
+	color: #999;
+}
+.attrUsageY {
+	color: #7e7e00;
+}
+.attrUsageA {
+	color: #009114;
+}
+.attrInfo:empty {
+	display: none;
+}
+.type {
+	display: flex;
+}
+.verList {
+	flex: 1 0 20%;
+	display: flex;
+	flex-direction: column-reverse;
+	margin: 8rpx;
+	background-color: rgba(0,0,0,0.06);
+}
+.verList .version {
+	flex: 0 1 15%;
+	flex-direction: column-reverse;
+	justify-content: flex-start;
+	align-items: center;
+	padding: 10rpx 20rpx;
+	text-align: center;
+	line-height: 1.2;
+}
+.verList .version:empty {
+	display: none;
+}
+.verList .version {
+	position: relative;
+	padding: 10rpx;
+	text-align: center;
+	color: #fff;
+}
+.verList .version:nth-child(1) {
+	color: #000;
+}
+.verList .brwoserVerY {
+	background-color: #39b54a;
+}
+.verList .brwoserVerY:after {
+	content: " ⬆︎"
+}
+.verList .brwoserVerN {
+	background-color: #c44230;
+}
+.verList .brwoserVerN:after {
+	content: " ⬇︎"
+}
+.verList .brwoserVerU {
+	background-color: #838383;
+}
+.verList .brwoserVerU:after {
+	content: " ⬇︎"
+}
+.verList .brwoserVerA {
+	background-color: #A8BD04;
+}
+.verList .brwoserVerA:after {
+	content: " ⬇︎"
+}
+
+
+.browser_items text {
+	display: flex;
+	flex: 0 1 60rpx;
+	font-size: 24rpx;
+	line-height: 20rpx;
+}
+.browser_items text text {
+	flex: 1 1 auto;
+	text-align: center;
+}
+.red:empty,
+.yellow:empty,
+.green:empty,
+.unknow:empty {
+	display: none;
+}
+.unknow {
+	position: relative;
+	padding: 10rpx;
+	text-align: center;
+	color: #fff;
+	background-color: #838383;
+}
+.red {
+	position: relative;
+	padding: 10rpx;
+	text-align: center;
+	color: #fff;
+	background-color: #c44230;
+}
+.red:after {
+	content: " ⬇︎";
+	display: inline-block;
+	margin-left: 4rpx;
+	font-size: 20rpx;
+}
+.yellow {
+	position: relative;
+	padding: 10rpx;
+	text-align: center;
+	color: #fff;
+	background-color: #A8BD04;
+}
+.green {
+	position: relative;
+	padding: 10rpx;
+	text-align: center;
+	color: #fff;
+	background-color: #39b54a;
+}
+.yellow:after,
+.green:after {
+	content: " ⬆︎";
+	display: inline-block;
+	margin-left: 10rpx;
+	font-size: 20rpx;
+}
+.colorSimple {
+	position: relative;
+	margin: 10rpx 20rpx;
+	font-size: 24rpx;
+	text-align: right;
+}
+.pager {
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+.colorSimple text {
+	padding: 10rpx 20rpx;
+}
+.colorSimple text:after {
+	display: none;
+}
+.tipsBox view {
+	display: none;
+}
+.tipsBox {
+	position: fixed;
+	left: 100rpx;
+	right: 100rpx;
+	bottom: 0;
+	text-align: center;
+}
+.tipsBox .findTips404 {
+	display: block;
+}
+.tipsBox view text {
+	position: relative;
+	display: block;
+	padding: 20rpx;
+	border-radius: 8rpx;
+	color: #fff;
+	background-color: #DB5600;
+	box-shadow: 2rpx 2rpx 8rpx 0 rgba(220,220,220,0.4) inset;
+	filter: drop-shadow(2rpx 4rpx 4rpx #d05600)
+}
+.tipsBox view text:after {
+	content: "";
+	position: absolute;
+	right: 120rpx;
+	bottom: -14rpx;
+	width: 0;
+	height: 0;
+	border-top:14rpx solid #db5600;
+	border-bottom:0 none;
+	border-left:14rpx solid transparent;
+	border-right:14rpx solid transparent;
+}
+.findTipsPic {
+	position: absolute;
+	bottom: 50rpx;
+	right: 10rpx;
+	width: 420rpx;
+	height: 420rpx;
+	margin-left: 200rpx;
+}
+.loadDataBtn {
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	padding: 11.9% calc(50% - 40rpx);
+	line-height: 1.2;
+	font-size: 80rpx;
+	font-weight: bold;
+	color: rgba(255,255,255,0.1);
+	text-shadow: -1rpx -1rpx 0 #3D3527;
+	background-color: rgba(250,250,250,0.1);
+}
+.loadMoreBox {
+	display: none;
+}
+.getMoreList .loadMoreBox {
+	display: block;
+	padding: 10rpx;
+	margin:0 20rpx;
+	text-align: center;
+	font-size: 32rpx;
+	border-radius: 8rpx;
+	color: #fff;
+	background-color: #DB5600;
+}
+.showThis {
+	padding: 5rpx 0 30rpx;
+	text-align: center;
+	font-size: 28rpx;
+	color: #999;
+	display: none;
+}
+.showEnd {
+	display: block;
+}

@@ -1,0 +1,46 @@
+<view class="container">
+	<view class="updata_time">{{ _timeStamp }}</view>
+
+	<form bindsubmit="formSubmit">
+		<view class="search_input">
+			<text>Can I use</text> <input type="text" confirm-type="search" placeholder-style="color: #d8d8d8" placeholder="输入属性后按键盘上的搜索" bindinput="beginSearch" focus="{{ inputFocus }}" bindconfirm="bindconfirm" />
+		</view>
+	</form>
+
+	<block wx:if="{{ _CSS2Title != '' }}">
+		<view class="supportList">
+			<view class="css2Title">{{ _CSS2Title }}</view>
+			<view class="css2Descrption">{{ _CSS2Descrtion }}</view>
+			<block wx:for="{{ _CSS2List }}" wx:key="CSS2">
+				<view class="css2Item">{{ item }}</view>
+			</block>
+		</view>
+	</block>
+
+	<view class="colorSimple">
+		<text class="green">支持</text> <text class="yellow">部分支持</text> <text class="red">不支持</text> <text class="unknow">未知</text>
+	</view>
+
+	<view class="caniuse_list">
+		<block wx:for="{{ getCSS3 }}" wx:key="attr_list" wx:for-item="attr_list">
+			<view class="item_box" bindtouchstart="touchStart"  bindtouchend="touchEnd" bindtap="longTap" id="{{ index }}">
+				<block wx:for="{{ attr_list }}" wx:key="attr_list" wx:for-item="attr_description">
+					<view wx:if="{{ index == 'title' }}" class="attrTitle">{{ attr_description }}</view>
+					<view wx:if="{{ index == 'description' }}" class="attrDescription">{{ attr_description }}</view>
+					<view wx:if="{{ index == 'usage_perc_a' }}" class="attrUsageA">{{ attr_description }}</view>
+					<view wx:if="{{ index == 'usage_perc_y' }}" class="attrUsageY">{{ attr_description }}</view>
+					<view wx:if="{{ index == 'browser' }}" class="browser_list">
+						<view wx:for="{{ attr_description }}" wx:key="browserList" wx:for-item="browserInfo" class="verList">
+							<view class="version">{{ index }}</view>
+							<block wx:for="{{ browserInfo }}" wx:key="browserList" wx:for-item="browserVer">
+								<view class="version {{ index }}" wx:if="{{ browserVer != 0 }}">{{ browserVer }}</view>
+							</block>
+						</view>
+					</view>
+				</block>
+			</view>
+		</block>
+	</view>
+
+	<view class="showThis {{ _showEnd }}">{{ _theEnd }}</view>
+</view>
