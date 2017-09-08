@@ -1,0 +1,25 @@
+<style lang="less">
+
+</style>
+<template>
+  <view>
+    nihao
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+
+  export default class Index extends wepy.page {
+    config = {
+      navigationBarTitleText: '测试'
+    }
+    data = {
+      motto: 'Hello World',
+      userInfo: {}
+    };
+    onLoad() {
+      console.log('onLoad');
+    };
+  }
+</script>

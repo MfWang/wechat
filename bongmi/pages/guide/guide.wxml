@@ -1,0 +1,36 @@
+<view class="guide">
+
+  <view class="guide_item" wx:for="{{list}}" wx:key="guide_item_{{index}}" wx:for-item="item">
+
+    <view class="guide_item_title {{index == active_index ? 'guide_item_title_show' : ''}}" data-index="{{index}}" bindtap="toggleShow">
+      <span class="iconfont icon-guide_icon_heart"></span>
+      <text class="title">{{item.title}}</text>
+    </view>
+
+    <view class="guide_item_content {{index == active_index ? 'guide_item_content_show' : ''}}">
+
+      <view class="guide_content {{index == active_index ? 'guide_content_show' : ''}}">
+
+        <block wx:if="{{item.img}}">
+          <image class="guide_img" src="{{item.img}}"></image>
+        </block>
+
+        <block wx:for="{{item.items}}" wx:key="guide_items_{{index}}" wx:for-item="items">
+          <text class="guide_text">{{items}}</text>
+        </block>
+
+        <block wx:if="{{item.tip}}">
+          <text class="guide_text_tip">{{item.tip}}</text>
+        </block>
+
+      </view>
+
+    </view>
+
+  </view>
+
+</view>
+
+
+
+

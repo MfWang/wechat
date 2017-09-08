@@ -4,12 +4,12 @@
     "pages/demo/demo",
     "pages/logs/logs",
     "pages/user/user",
-    "pages/book/book",
     "pages/discover/discover",
-    "pages/me/me"
+    "pages/me/me",
+    "pages/cutInside/cutInside"
   ],
   "tabBar": {
-    "color": "#a9b7b7",
+    "color": "#000",
     "selectedColor": "#1afa29",
     "borderStyle": "black",
     "backgroundColor": "#fff",
@@ -23,8 +23,8 @@
       {
         "selectedIconPath": "images/tar-bar-book-active.png",
         "iconPath": "images/tar-bar-book.png",
-        "pagePath": "pages/book/book",
-        "text": "通讯录"
+        "pagePath": "pages/logs/logs",
+        "text": "日志"
       },
       {
         "selectedIconPath": "images/tar-bar-discover-active.png",
@@ -45,7 +45,7 @@
     "backgroundTextStyle":"light",
     "navigationBarBackgroundColor": "#000",
     "navigationBarTitleText": "在这里设置小程序的标题",
-    "navigationBarTextStyle":"#fff",
+    "navigationBarTextStyle":"white",
     "backgroundColor": "white"
   }
 }

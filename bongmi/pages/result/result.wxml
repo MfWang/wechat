@@ -1,0 +1,36 @@
+<!--pages/result/result.wxml-->
+<view class="result">
+    <view class="result_1">
+    <text class="title">1. 智能识别出的位置（T为测试线，C为参考线）</text>
+    <text class="res" wx:if="{{result.detectType == 3}}">说明：未检测到参考线</text>
+    <view class="result_img">
+      <block wx:if="{{flag}}">
+        <image class="img" src="{{result.imgUrl}}"></image> 
+        <block wx:if="{{result.detectType != 3}}">
+          <text wx:if="{{result.detectType == 1}}" class="t" style="left:{{ result.testLineX}}">T</text>
+          <view wx:if="{{result.detectType == 1}}" class="line line1" style="left:{{ result.testLineX}}"></view>
+          <text class="c" style="left:{{ result.refLineX}}">C</text>
+          <view class="line line2" style="left:{{ result.refLineX}}"></view>
+        </block>
+      </block>
+    </view>
+  </view>
+  <view class="result_2">
+    <text class="title">2. 检测结果：</text>
+    <text class="res">{{result.text }}</text>
+    <view class="result_2_img">
+      <block wx:for="{{results}}" wx:key="{{index}}">
+        <view id="result_{{index}}" class="result_2_img_item {{index == result.index ? 'active' : ''}}" bindtap="changeResult">
+          <image class="img" src="{{item.img}}"></image>
+          <text>{{item.name}}</text>
+        </view>
+      </block>
+    </view>
+    <text class="tip">说明：您可以尝试重新拍摄，如果您已经很清楚排卵试纸的状态，也可以选择直接标记状态并保存即可。</text>
+  </view>
+
+  <view class="cropper-buttons">
+    <view class="back" bindtap="takePhoto"><text class="iconfont icon-btn_back"></text> </view>
+    <view class="complete" bindtap="getCropperImage"> <text class="iconfont icon-btn_correct"></text> </view>
+  </view>
+</view>

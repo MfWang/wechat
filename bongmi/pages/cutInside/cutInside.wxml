@@ -1,0 +1,12 @@
+<import src="../dist/weCropper.wxml"/>
+
+<view class="pages">
+   <view class="cropper-wrapper">
+    <template is="weCropper" data="{{...cropperOpt}}"/>
+  </view>
+  <view class="cropper-buttons">
+    <view class="back" bindtap="takePhoto"><text class="iconfont icon-btn_back"></text> </view>
+    <view class="complete" bindtap="uploadToResult"> <text class="iconfont icon-btn_correct"></text> </view>
+  </view>
+</view>
+  

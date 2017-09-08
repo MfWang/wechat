@@ -1,0 +1,83 @@
+.pages{
+  position: relative;
+}
+.cropper-wrapper{
+  width: 100%;
+  height: calc(100vh - 100rpx);  
+}
+.cropper{
+  background: rgba(0,0,0,0.8);
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+.cover-img{
+  position: absolute;
+  top: 300rpx;
+  left: 0;
+  z-index: 10;
+  width: 100%;
+  height: 50rpx;
+  background: url('http://att2.citysbs.com/hangzhou/image/day_081106/middle_20081106_c28e7844d9b2ed399bbczejxNUqjwiHB.jpg') no-repeat center;
+}
+.tips{
+  width: 100%;
+  position: absolute;
+  top: 200rpx;
+  left: 50%;
+  color: #fff;
+  font-size: 24rpx;
+  text-align: center;
+  transform: translateX(-50%);
+  z-index: 10;
+}
+.tips2{
+  width: 100%;
+  position: absolute;
+  top: 650rpx;
+  left: 50%;
+  color: #fff;
+  font-size: 24rpx;
+  text-align: center;
+  transform: translateX(-50%);
+  z-index: 10;
+}
+.line{
+  position: absolute;
+  top: 250rpx;
+  left: 440rpx;
+  width: 6rpx;
+  height: 200rpx;
+  background: yellow;
+  z-index: 10;
+}
+.line2{
+  position: absolute;
+  top: 600rpx;
+  left: 440rpx;
+  width: 6rpx;
+  height: 200rpx;
+  background: yellow;
+  z-index: 10;
+}
+.cropper-buttons{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100rpx;
+  text-align: center;
+  line-height: 100rpx;
+  position: absolute;
+  top: calc(100vh - 100rpx);
+  left: 0;
+  font-size: 24rpx;
+  z-index: 10;
+  background-color: rgba(0, 0, 0, 0.95);
+  color: #fff;
+}
+
+.cropper-buttons .button{
+    width: 33.3%;
+    text-align: center;
+}

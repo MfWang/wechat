@@ -1,0 +1,45 @@
+{
+  "pages":[
+    "pages/guide/guide",
+    "pages/today/today",
+    "pages/record/record",
+    "pages/test/test",
+    "pages/cutInside/cutInside",
+    "pages/result/result",
+    "pages/index/index"
+  ],
+  "tabBar": {
+    "color": "#A0A0A0",
+    "selectedColor": "#E56CAC",
+    "borderStyle": "black",
+    "backgroundColor": "#FBFBFB",
+    "list": [
+      {
+        "selectedIconPath": "images/btn_guide_press.png",
+        "iconPath": "images/btn_guide.png",
+        "pagePath": "pages/guide/guide",
+        "text": "使用指导"
+      },
+      {
+        "selectedIconPath": "images/btn_today_press.png",
+        "iconPath": "images/btn_today.png",
+        "pagePath": "pages/today/today",
+        "text": "今日信息"
+      },
+      {
+        "selectedIconPath": "images/btn_edit_press.png",
+        "iconPath": "images/btn_edit.png",
+        "pagePath": "pages/record/record",
+        "text": "我的记录"
+      }
+    ]
+  },
+  
+  "window":{
+    "backgroundTextStyle":"light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "在这里设置小程序的标题",
+    "navigationBarTextStyle":"black",
+    "backgroundColor": "white"
+  }
+}

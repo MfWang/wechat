@@ -1,2 +1,10 @@
 <!--pages/discover/discover.wxml-->
-<text>pages/discover/discover.wxml</text>
+<button class="weui-btn" type="primary">页面主操作 Normal</button>
+<picker bindchange="bindPickerChange" value="{{index}}" range="{{array}}">
+    <view class="picker">
+      当前选择：{{array[index]}}
+    </view>
+  </picker>
+    <view class="iconfont icon-trophy">你好</view>
+  <button type="default" bindtap="takePhoto"> default </button>
+
