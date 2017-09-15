@@ -33,60 +33,6 @@ Page({
     }
   },
 
-  getRecords: function () {
-    const that = this;
-    const bmUser = app.globalData.bmUser;
-    const date = new Date();
-    const h = date.getHours();
-    const m = date.getMinutes();
-    const s = date.getSeconds();
-    const timestamp = Math.floor(date.getTime() / 1000);
-    const interval = timestamp;
-    wx.request({
-      url: `${app.globalData.bongmiAPI}/body_status/${bmUser.userId}/${bmUser.selfMemberId}/report/512/${timestamp}/${interval}`,
-      data: {
-        app_flag: 1,
-        access_token: bmUser.accessToken
-      },
-      header: {
-        authorization: 'Lollypop-Weixin-Mini-Program'
-      },
-      success: function (res) {
-        console.log('getRecords success')
-        console.log(res.data)
-        const record = [];
-        let refDate = '';
-        let refObj = '';
-        res.data && res.data.map((item, index) => {
-          const detail = JSON.parse(item.detail);
-          const time = new Date(item.timestamp * 1000);
-          item.date = time.getMonth() + 1 + '月' + time.getDay() + '号'
-          item.time = `${time.getHours() < 10 ? '0' + time.getHours() : time.getHours()}:${time.getMinutes() < 10 ? '0' + time.getMinutes() : time.getMinutes()}`;
-          item.detail = detail;
-          item.type = item.detail.resultType == 1 ? '阴性' : (item.detail.resultType == 2 ? '弱阳' : '强阳');
-          item.classname = item.detail.resultType == 1 ? 'peak' : (item.detail.resultType == 2 ? 'low' : 'high');
-          if (item.date == refDate) {
-            item.dateFlag = false;
-          } else {
-            item.dateFlag = true;
-            refDate = item.date;
-          }
-          item.lineTag = true;
-          if (index != 0 && item.dateFlag) {
-            record[index - 1].lineTag = false;
-          }
-          record.push(item)
-        });
-        that.setData({
-          records: record,
-          menstruationPeriod: app.globalData.bmUser.menstruationPeriod
-        }, () => {
-          wx.hideLoading()
-        })
-      }
-    })
-  },
-
   updatePeriodDays: function (days) {
     var that = this;
     wx.request({
@@ -104,6 +50,7 @@ Page({
             menstruationPeriod: days
           }, () => {
             app.globalData.bmUser.menstruationPeriod = days;
+            app.globalData.menstruationPeriodFlag = true;
             wx.hideLoading()
             wx.showToast({
               title: '更新成功',
@@ -119,16 +66,84 @@ Page({
       }
     })
   },
+  regetAuth: function () {
+    const that = this;
+    wx.getUserInfo({
+      withCredentials: false,
+      success: function (res) {
+        console.log('getWXUserInfo success')
+        app.globalData.userInfo = res.userInfo
+        // wx.showLoading({
+        //   title: '数据加载中',
+        //   mask: true
+        // })
+        app.loginWX()
+          .then(app.getBMToken)
+          .then(app.updateBMUser)
+          .then(app.getBMUserInfo)
+          .then(app.getTips)
+          .then(app.convertRecord)
+          .then(app.getRecords)
+          .then(() => {
+            that.setData({
+              menstruationPeriod: app.globalData.bmUser.menstruationPeriod,
+              records: app.globalData.recordsAll.ovulationTestResultList
+            }, () => {
+              wx.hideLoading()
+            })
+          })
+      },
+      fail: function (res) {
+        console.log('getWXUserInfo fail')
+        console.log(res)
+        wx.showModal({
+          title: '是否要打开设置页面重新授权',
+          content: '需要获取您的公开信息(昵称、头像等)',
+          confirmColor: '#E56CAC',
+          success: function (res) {
+            if (res.confirm) {
+              console.log('用户点击确定')
+              wx.openSetting({
+                success: (res) => {
+                  // wx.showLoading({
+                  //   title: '数据加载中',
+                  //   mask: true
+                  // })
+                  app.loginWX()
+                    .then(app.getBMToken)
+                    .then(app.updateBMUser)
+                    .then(app.getBMUserInfo)
+                    .then(app.getTips)
+                    .then(app.convertRecord)
+                    .then(app.getRecords)
+                    .then(() => {
+                      that.setData({
+                        menstruationPeriod: app.globalData.bmUser.menstruationPeriod,
+                        records: app.globalData.recordsAll.ovulationTestResultList
+                      }, () => {
+                        wx.hideLoading()
+                      })
+                    })
+                },
+                fail: (res) => {
+                },
+                complete: (res) => {
+                }
+              })
+            } else if (res.cancel) {
+              console.log('用户点击取消')
+            }
+          }
+        })
+      }
+    })
+  },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
     const that = this;
-    wx.showLoading({
-      title: '数据加载中',
-      mask: true
-    })
     var array = [];
     for (let i = 10; i <= 90; i++) {
       array.push(i)
@@ -141,46 +156,39 @@ Page({
   /**
    * 生命周期函数--监听页面显示
    */
-  onShow: function () {
-    var that = this;
-    console.log(app.globalData);
+  onShow: function (options) {
+    const that = this;
     if (app.globalData.userInfo) {
-      if (!that.data.records) {
-        wx.showLoading({
-          title: '数据加载中',
-          mask: true
-        })
-        that.getRecords()
-      } else if (app.globalData.refreshRecord) {
-        wx.showLoading({
-          title: '数据加载中',
-          mask: true
-        })
-        app.globalData.refreshRecord = false;
-        that.getRecords()
-      }
-      
-    } else {
-      app.getWXSetting()
-        .then(app.authorize)
-        .then(app.openWXSetting)
-        .then(() => {
-          wx.showLoading({
-            title: '数据加载中',
-            mask: true
+      if (app.globalData.refresh) {
+        // wx.showLoading({
+        //   title: '数据加载中',
+        //   mask: true
+        // })
+        app.getTips()
+          .then(app.convertRecord)
+          .then(app.getRecords)
+          .then(() => {
+            that.setData({
+              menstruationPeriod: app.globalData.bmUser.menstruationPeriod,
+              records: app.globalData.recordsAll.ovulationTestResultList
+            }, () => {
+              wx.hideLoading()
+            })
           })
-        })
-        .then(app.loginWX)
-        .then(app.getWXUserInfo)
-        .then(app.getBMToken)
-        .then(app.updateBMUser)
-        .then(app.getBMUserInfo)
-        .then(() => {
-          that.getRecords()
-        })
-        .catch(function () {
+      } else {
+        // wx.showLoading({
+        //   title: '数据加载中',
+        //   mask: true
+        // })
+        that.setData({
+          menstruationPeriod: app.globalData.bmUser.menstruationPeriod,
+          records: app.globalData.recordsAll.ovulationTestResultList
+        }, () => {
           wx.hideLoading()
         })
+      }
+    } else {
+      that.regetAuth()
     }
   }
 })

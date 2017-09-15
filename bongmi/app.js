@@ -2,81 +2,42 @@
 var util = require('utils/util')
 App({
   onLaunch: function() {
-
     // var that = this;
     // that.loginWX()
     // .then(that.getWXUserInfo)
     // .then(that.getBMToken)
     // .then(that.updateBMUser)
-    // .then(that.getBMUserInfo)
+    //   .then(that.getBMUserInfo)
+    //   .then(that.getRecords)
+    //   .then(that.convertRecord)
+    //   // .then(that.getTips)
     // .then(function () {
-    //   console.log(that.globalData);
+    //   console.log('-------------------------------------')
     // })
     
   },
-  getWXSetting: function () {
+  getWXUserInfo: function () {
     var that = this;
     return new Promise(function (resolve, reject) {
-      console.log('getWXSetting start')
-      wx.getSetting({
-        success(res) {
-          console.log('getWXSetting success')
-          resolve(res)
-        },
-        fail: function (res) {
-          console.log('接口调用失败')
-          reject();
+      console.log('getWXUserInfo start')
+        if (that.globalData.userInfo) {
+        } else {
+          //调用登录接口
+          wx.getUserInfo({
+            withCredentials: false,
+            success: function (res) {
+              console.log('getWXUserInfo success')
+              that.globalData.userInfo = res.userInfo
+              resolve()
+            },
+            fail: function (res) {
+              console.log('getWXUserInfo fail')
+              console.log(res)
+              reject()
+            }
+          })
         }
-      })
     });
-  },
-  authorize: function (res) {
-    var that = this;
-    return new Promise(function (resolve, reject) {
-      console.log('authorize start')
-      if (!res.authSetting['scope.userInfo']) {
-        console.log(222)
-        wx.authorize({
-          scope: 'scope.userInfo',
-          success() {
-            console.log('authorize success')
-            resolve(false)
-          },
-          fail: function () {
-            console.log('authorize fail')
-            resolve(true)
-          }
-        })
-      } else {
-        console.log('authorize else')
-        resolve(false)
-      }
-    });
-  },
-  openWXSetting: function (flag) {
-    var that = this;
-    return new Promise(function (resolve, reject) {
-      console.log('openWXSetting start')
-      console.log(flag)
-      if (!flag) {
-        resolve()
-      } else {
-        wx.openSetting({
-          success: (res) => {
-            console.log(66)
-            resolve()
-          },
-          fail: (res) => {
-            console.log(res)
-          },
-          complete: (res) => {
-            console.log(0)
-          }
-        })
-      }
-      
-    });
-    
   },
   loginWX: function () {
     var that = this;
@@ -106,29 +67,6 @@ App({
           }
         }
       })
-    });
-  },
-  getWXUserInfo: function () {
-    var that = this;
-    return new Promise(function (resolve, reject) {
-      console.log('getWXUserInfo start')
-        if (that.globalData.userInfo) {
-        } else {
-          //调用登录接口
-          wx.getUserInfo({
-            withCredentials: false,
-            success: function (res) {
-              console.log('getWXUserInfo success')
-              that.globalData.userInfo = res.userInfo
-              resolve()
-            },
-            fail: function (res) {
-              console.log('getWXUserInfo fail')
-              console.log(res)
-              reject()
-            }
-          })
-        }
     });
   },
   getBMToken: function () {
@@ -192,6 +130,7 @@ App({
         success: function (res) {
           console.log('getBMUserInfo success')
           that.globalData.bmUser = Object.assign(that.globalData.bmUser, res.data);
+          console.log(that.globalData)
           resolve()
         }
       })
@@ -279,12 +218,110 @@ App({
       }
     })
   },
+  getTips: function () {
+    const that = this;
+    const bmUser = that.globalData.bmUser;
+    return new Promise(function (resolve, reject) {
+      console.log('getTips')
+      wx.request({
+        url: `${that.globalData.bongmiAPI}/wechat_mp/${bmUser.userId}/${bmUser.selfMemberId}/ovulation_test`,
+        data: {
+          app_flag: 1,
+          access_token: bmUser.accessToken
+        },
+        header: {
+          authorization: 'Lollypop-Weixin-Mini-Program'
+        },
+        success: function (res) {
+          console.log(res.data)
+          that.globalData.recordsAll = res.data;
+          resolve()
+        },
+        fail: function () {
+          reject()
+        }
+      })
+    });
+  },
+  convertRecord: function () {
+    const that = this;
+    return new Promise(function (resolve, reject) {
+      console.log('convertRecord start')
+      const records = that.globalData.recordsAll;
+      const recordsList = that.globalData.recordsAll.ovulationTestResultList;
+      let date = '';
+      recordsList.map((item) => {
+        const time = new Date(item.timestamp * 1000);
+        item.date = `${time.getMonth() + 1}月${time.getDate()}日`;
+        console.log(item.date)
+        if (item.date == date) {
+          item.dateFlag = false;
+        } else {
+          item.dateFlag = true;
+          date = item.date;
+        }
+        item.time = `${time.getHours() < 10 ? '0' + time.getHours() : time.getHours()}:${time.getMinutes() < 10 ? '0' + time.getMinutes() : time.getMinutes()}`;
+        item.type = item.resultType == 1 ? '阴性' : (item.resultType == 2 ? '弱阳' : '强阳');
+        item.classname = item.resultType == 1 ? 'peak' : (item.resultType == 2 ? 'low' : 'high');
+        item.tip = false;
+      })
+      that.globalData.recordsAll = {
+        ovulationTestResultList: recordsList,
+        triggerType: records.triggerType
+      };
+      console.log(that.globalData.recordsAll)
+      console.log('convertRecord end')
+      resolve()
+    });
+  },
+  getRecords: function () {
+    const that = this;
+    const bmUser = that.globalData.bmUser;
+
+    const date = new Date();
+    const timestamp = Math.floor(date.getTime() / 1000);
+    const h = date.getHours();
+    const m = date.getMinutes();
+    const s = date.getSeconds();
+    const interval = h * 3600 + m * 60 + s;
+
+    return new Promise(function (resolve, reject) {
+      console.log('getRecords start')
+      wx.request({
+        url: `${that.globalData.bongmiAPI}/body_status/${bmUser.userId}/${bmUser.selfMemberId}/report/512/${timestamp}/${interval}`,
+        data: {
+          app_flag: 1,
+          access_token: bmUser.accessToken
+        },
+        header: {
+          authorization: 'Lollypop-Weixin-Mini-Program'
+        },
+        success: function (res) {
+          console.log('getRecords success')
+          const recordsToday = res.data[0]
+          if (recordsToday) {
+            recordsToday.detail = JSON.parse(recordsToday.detail);
+            if (!recordsToday.detail.map) {
+              recordsToday.detail = [recordsToday.detail];
+            }
+            that.globalData.recordsToday = recordsToday;
+          }
+          resolve()
+        },
+        fail: function () {
+          console.log('getRecords fail')
+          reject()
+        }
+      })
+    });
+  },
   globalData: {
     bongmiAPI: 'https://api-staging.bongmi.com/v1',
     appid: 'wx7e71d8c807fc0f58',
     secret: 'a76c9f9638f02c9b19d048a6fccefca1',
     code: null,
     bmUser: null,
+    menstruationPeriodFlag: false,
     userInfo: null,
     pictureLocal: null,
     pictureOnline: null,
@@ -295,7 +332,9 @@ App({
     downloadUrl: 'https://img.bongmi.com',
     https: true,
     uploadInfo: null,
-    refreshToday: false,
-    refreshRecord: false,
+    todayBegin: 0,
+    refresh: false,
+    recordsAll: null,
+    recordsToday: null,
   }
 })

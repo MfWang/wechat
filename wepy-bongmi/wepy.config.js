@@ -2,7 +2,7 @@ const path = require('path');
 var prod = process.env.NODE_ENV === 'production'
 
 module.exports = {
-  wpyExt: '.wpy',
+  wpyExt: '.vue',
   build: {
     web: {
       htmlTemplate: path.join('src', 'index.template.html'),
@@ -15,9 +15,9 @@ module.exports = {
     less: {
       compress: true
     },
-    /*sass: {
-      outputStyle: 'compressed'
-    },*/
+    // sass: {
+    //   outputStyle: 'compressed'
+    // },
     babel: {
       sourceMap: true,
       presets: [

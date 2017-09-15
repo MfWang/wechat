@@ -6,7 +6,8 @@ Page({
    * 页面的初始数据
    */
   data: {
-    result: {
+    result: null,
+    show: {
       index: -1
     },
     flag: false,
@@ -28,10 +29,10 @@ Page({
   changeResult: function(e) {
     var that = this;
     const index = e.currentTarget.id.split('_')[1];
-    const result = that.data.result;
-    result.index = index;
+    const show = that.data.show;
+    show.index = index;
     this.setData({
-      result: result
+      show: show
     })
   },
   takePhoto: function () {
@@ -43,7 +44,6 @@ Page({
   getResult: function () {
     var that = this;
     const bmUser = app.globalData.bmUser;
-    // app.globalData.tailorOnline = 'ovulation-test-paper/55159/67e555ad-a03d-4933-92f9-8e69063ee66f'
     wx.request({
       url: `${app.globalData.bongmiAPI}/body_status/${bmUser.userId}/ovulation?url=` + encodeURIComponent(`${app.globalData.downloadUrl}/${app.globalData.tailorOnline}`),
       data: {
@@ -53,9 +53,10 @@ Page({
         authorization: 'Lollypop-Weixin-Mini-Program'
       },
       success: function (res) {
+        console.log('--------------')
         console.log(res)
-        
         const data = res.data;
+        const result = JSON.parse(JSON.stringify(res.data));
         if (data.detectType == 3) {
           data.text = '检测失败';
           data.index = -1;
@@ -73,11 +74,11 @@ Page({
         }
         data.testLineX = data.testLineX + '%'
         data.refLineX = data.refLineX + '%'
-        // data.testLineX = data.testLineX / 100 * 100% 
-        // data.refLineX = data.refLineX / 100 * 100%
+        console.log(data)
         console.log(data)
         that.setData({
-          result: data,
+          result: result,
+          show: data,
           flag: true
         });
       }
@@ -87,7 +88,8 @@ Page({
     var that = this;
     const bmUser = app.globalData.bmUser;
     const result = that.data.result;
-    if (that.data.result.index == -1) {
+    const show = that.data.show;
+    if (show.index == -1) {
       wx.showModal({
         title: '提示',
         content: '请选择检测结果再上传',
@@ -99,31 +101,48 @@ Page({
         }
       })
     } else {
-      if (that.data.result.index == 0) {
+      if (show.index == 0) {
         result.resultType = 3
-      } else if (that.data.result.index == 1) {
+      } else if (show.index == 1) {
         result.resultType = 2
-      } else if (that.data.result.index == 2) {
+      } else if (show.index == 2) {
         result.resultType = 1
       }
       result.originalImgUrl = `${app.globalData.downloadUrl}/${app.globalData.pictureOnline}`;
-      wx.request({
-        url: `${app.globalData.bongmiAPI}/body_status/${bmUser.userId}/${bmUser.selfMemberId}?access_token=${bmUser.accessToken}`,
-        data: {
-          timestamp: Math.floor(new Date().valueOf() / 1000),
+      result.timestamp = Math.floor(new Date().valueOf() / 1000)
+      console.log('------注意----------')
+      if (app.globalData.recordsToday == null) {
+        var date = new Date();
+        date.setHours(0);
+        date.setMilliseconds(0);
+        date.setSeconds(0);
+        date.setMinutes(0);
+        console.log(result)
+        app.globalData.recordsToday = {
+          timestamp: Math.floor(date.valueOf() / 1000),
+          // timestamp: 1505318400,
           type: 'OVULATION_TEST',
           userId: bmUser.userId,
           familyMemberId: bmUser.selfMemberId,
-          detail: JSON.stringify(result),
+          detail: result,
           appFlag: 1,
-        },
+        }
+      } else {
+        app.globalData.recordsToday.detail.push(result)
+      }
+      var data = app.globalData.recordsToday
+      data.detail = JSON.stringify(data.detail)
+      console.log('上传')
+      console.log(data)
+      wx.request({
+        url: `${app.globalData.bongmiAPI}/body_status/${bmUser.userId}/${bmUser.selfMemberId}?access_token=${bmUser.accessToken}`,
+        data: data,
         header: {
           authorization: 'Lollypop-Weixin-Mini-Program'
         },
         method: "PUT",
         success: function (res) {
-          app.globalData.refreshToday = true;
-          app.globalData.refreshRecord = true;
+          app.globalData.refresh = true;
           wx.switchTab({
             url: '/pages/today/today'
           })

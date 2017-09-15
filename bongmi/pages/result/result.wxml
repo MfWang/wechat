@@ -2,25 +2,25 @@
 <view class="result">
     <view class="result_1">
     <text class="title">1. 智能识别出的位置（T为测试线，C为参考线）</text>
-    <text class="res" wx:if="{{result.detectType == 3}}">说明：未检测到参考线</text>
+    <text class="res" wx:if="{{show.detectType == 3}}">说明：未检测到参考线</text>
     <view class="result_img">
       <block wx:if="{{flag}}">
-        <image class="img" src="{{result.imgUrl}}"></image> 
-        <block wx:if="{{result.detectType != 3}}">
-          <text wx:if="{{result.detectType == 1}}" class="t" style="left:{{ result.testLineX}}">T</text>
-          <view wx:if="{{result.detectType == 1}}" class="line line1" style="left:{{ result.testLineX}}"></view>
-          <text class="c" style="left:{{ result.refLineX}}">C</text>
-          <view class="line line2" style="left:{{ result.refLineX}}"></view>
+        <image class="img" src="{{show.imgUrl}}"></image> 
+        <block wx:if="{{show.detectType != 3}}">
+          <text wx:if="{{show.detectType == 1}}" class="t" style="left:{{ show.testLineX}}">T</text>
+          <view wx:if="{{show.detectType == 1}}" class="line line1" style="left:{{ show.testLineX}}"></view>
+          <text class="c" style="left:{{ show.refLineX}}">C</text>
+          <view class="line line2" style="left:{{ show.refLineX}}"></view>
         </block>
       </block>
     </view>
   </view>
   <view class="result_2">
     <text class="title">2. 检测结果：</text>
-    <text class="res">{{result.text }}</text>
+    <text class="res">{{show.text }}</text>
     <view class="result_2_img">
       <block wx:for="{{results}}" wx:key="{{index}}">
-        <view id="result_{{index}}" class="result_2_img_item {{index == result.index ? 'active' : ''}}" bindtap="changeResult">
+        <view id="result_{{index}}" class="result_2_img_item {{index == show.index ? 'active' : ''}}" bindtap="changeResult">
           <image class="img" src="{{item.img}}"></image>
           <text>{{item.name}}</text>
         </view>

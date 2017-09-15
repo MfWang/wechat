@@ -1,10 +1,10 @@
 {
   "pages":[
-    "pages/guide/guide",
     "pages/today/today",
+    "pages/guide/guide",
     "pages/record/record",
-    "pages/test/test",
     "pages/cutInside/cutInside",
+    "pages/test/test",
     "pages/result/result",
     "pages/index/index"
   ],

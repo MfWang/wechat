@@ -21,9 +21,10 @@
         <text class="time">{{item.time}}</text>
         <view class="content">
           <view class="flex-row {{item.classname}}">
-            <text class="type">{{item.type }}\n<text class="number">LH{{item.detail.lh}}</text></text>
-            <image class="item_img" src="{{item.detail.imgUrl}}"></image>
+            <text class="type">{{item.type }}\n<text class="number">LH{{item.lh}}</text></text>
+            <image class="item_img" src="{{item.imgUrl}}"></image>
           </view>
+          <view wx:if="{{item.triggerType == 3}}" class="tip">发生强转弱，可能排卵</view>
         </view>
       </view>
     </block>

@@ -6,17 +6,26 @@ Page({
    * 页面的初始数据
    */
   data: {
-    index: 2,
+    index: 0,
     guide: [
       [
         {
-          "desc": "您的周期为50天，建议您咨询一下专科医生，或者在经期结束之后，即刻开始坚持记录排卵试纸情况～"
+          "desc": "您还没有设置过周期长度，设置周期长度后，小助手可以指导您使用排卵试纸的时间。"
         }
       ],
       [
         {
-          "desc": "强阳转弱阳出现了！排卵已经发生，5个小时内的爱爱也还是有很高的中奖几率的！",
-          "desc2": "您如果不能确定身体是否完全健康，可以坚持继续测量排卵试纸。因为有一些疾病可能会造成一个周期内出现多次小的强阳弱阳的交替变化，如果您发现这种情况，也不用胡思乱想，及时去看一下医生就好～"
+          "desc": "您的周期为X天，请在周期第N天开始使用排卵试纸"
+        }
+      ],
+      [
+        {
+          "desc": "您的周期过短，建议您咨询一下专科医生，或者在经期结束之后，即刻开始坚持记录排卵试纸情况～"
+        }
+      ],
+      [
+        {
+          "desc": "您的周期较长，建议您咨询一下专科医生，或者您预计下次经期来潮之前20天开始记录排卵试纸情况～"
         }
       ],
       [
@@ -31,184 +40,177 @@ Page({
       ],
       [
         {
-          "desc": "您的周期为26天，请在周期第9天开始使用排卵试纸～"
+          "desc": "在一个周期内出现强阳转弱阳，说明排卵已经发生，5个小时内的爱爱也还是有很高的中奖几率的！",
+          "desc2": "您如果不能确定身体是否完全健康，可以坚持继续测量排卵试纸。因为有一些疾病可能会造成一个周期内出现多次小的强阳弱阳的交替变化，如果您发现这种情况，也不用胡思乱想，及时去看一下医生就好～"
         }
       ],
-      [
-        {
-          "desc": "您还没有设置过周期长度，设置周期长度后，小助手可以指导您使用排卵试纸的时间。"
-        }
-      ]
     ],
-    records: []
+    records: null
   },
 
   takePhoto: function () {
     app.takePhoto();
   },
-
-  
-  getRecords: function () {
-
+  setting: function () {
+    wx.switchTab({
+      url: '/pages/record/record'
+    })
+  },
+  handleData: function () {
     const that = this;
-    const bmUser = app.globalData.bmUser;
-    const date = new Date();
-    const h = date.getHours();
-    const m = date.getMinutes();
-    const s = date.getSeconds();
-    const timestamp = Math.floor(date.getTime() / 1000);
-    const interval = h * 3600 + m * 60 + s;
-    console.log('getRecords')
-    console.log(app.globalData)
-    wx.request({
-      url: `${app.globalData.bongmiAPI}/body_status/${bmUser.userId}/${bmUser.selfMemberId}/report/512/${timestamp}/${interval}`,
-      data: {
-        app_flag: 1,
-        access_token: bmUser.accessToken
-      },
-      header: {
-        authorization: 'Lollypop-Weixin-Mini-Program'
-      },
+    return new Promise(function (resolve, reject) {
+      console.log('handleData start')
+      const date = new Date();
+      const h = date.getHours();
+      const m = date.getMinutes();
+      const s = date.getSeconds();
+      const timestamp = Math.floor(date.getTime() / 1000) - (h * 3600 + m * 60 + s);
+
+      const records = app.globalData.recordsAll.ovulationTestResultList.filter((item) => (item.timestamp >= timestamp))
+      that.setData({
+        records: records
+      })
+      console.log('handleData end')
+      resolve()
+    });
+  },
+  regetAuth: function () {
+    const that = this;
+    wx.getUserInfo({
+      withCredentials: false,
       success: function (res) {
-        const record = [];
-        res.data && res.data.map((item) => {
-          const detail = JSON.parse(item.detail);
-          const time = new Date(item.timestamp * 1000);
-          item.time = `${time.getHours() < 10 ? '0' + time.getHours() : time.getHours()}:${time.getMinutes() < 10 ? '0' + time.getMinutes() : time.getMinutes()}`;
-          item.detail = detail;
-          item.type = item.detail.resultType == 1 ? '阴性' : (item.detail.resultType == 2 ? '弱阳' : '强阳');
-          item.classname = item.detail.resultType == 1 ? 'peak' : (item.detail.resultType == 2 ? 'low' : 'high');
-          item.tip = false;
-          record.push(item)
-        });
-        that.setData({
-          records: record
-        }, () => {
-          wx.hideLoading()
+        console.log('getWXUserInfo success')
+        app.globalData.userInfo = res.userInfo
+
+        // wx.showLoading({
+        //   title: '数据加载中',
+        //   mask: true
+        // })
+        app.loginWX()
+          .then(app.getBMToken)
+          .then(app.updateBMUser)
+          .then(app.getBMUserInfo)
+          .then(app.getTips)
+          .then(app.convertRecord)
+          .then(app.getRecords)
+          .then(that.handleData)
+          .then(that.setTriggerType)
+      },
+      fail: function (res) {
+        console.log('getWXUserInfo fail')
+        console.log(res)
+        wx.showModal({
+          title: '是否要打开设置页面重新授权',
+          content: '需要获取您的公开信息(昵称、头像等)',
+          confirmColor: '#E56CAC',
+          success: function (res) {
+            if (res.confirm) {
+              console.log('用户点击确定')
+              wx.openSetting({
+                success: (res) => {
+
+                  // wx.showLoading({
+                  //   title: '数据加载中',
+                  //   mask: true
+                  // })
+                  app.loginWX()
+                    .then(app.getBMToken)
+                    .then(app.updateBMUser)
+                    .then(app.getBMUserInfo)
+                    .then(app.getTips)
+                    .then(app.convertRecord)
+                    .then(app.getRecords)
+                    .then(that.handleData)
+                    .then(that.setTriggerType)
+                },
+                fail: (res) => {
+                },
+                complete: (res) => {
+                }
+              })
+            } else if (res.cancel) {
+              console.log('用户点击取消')
+            }
+          }
         })
       }
     })
   },
-
+  setTriggerType: function () {
+    const that = this;
+    return new Promise(function (resolve, reject) {
+      console.log('setTriggerType start')
+      let triggerType = '';
+      triggerType = () => {
+        switch (app.globalData.recordsAll.triggerType) {
+          case 1:
+            const menstruationPeriod = app.globalData.bmUser.menstruationPeriod;
+            if (menstruationPeriod) {
+              if (menstruationPeriod < 21) {
+                return 2;
+              } else if (menstruationPeriod > 41) {
+                return 3;
+              } else {
+                const guide = that.data.guide;
+                const period = [6, 6, 7, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
+                return period[menstruationPeriod - 21];
+                guide[1] = {
+                  "desc": `您的周期为${menstruationPeriod}天，请在周期第${period[menstruationPeriod - 21]}天开始使用排卵试纸`
+                }
+                this.setData({
+                  guide: guide
+                })
+                return 1;
+              }
+            } else {
+              return 0;
+            }
+          case 2: return 4;
+          case 3: return 5;
+        }
+      }
+      that.setData({
+        index: triggerType()
+      })
+      console.log('setTriggerType end')
+      resolve()
+    });
+  },
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
   },
-  getWXSetting: function () {
-    var that = this;
-    console.log('getWXSetting start')
-    wx.getSetting({
-      success() {
-        console.log('getWXSetting success')
-        that.authorize()
-      },
-      fail: function () {
-        console.log('接口调用失败')
-      }
-    })
-  },
-  authorize: function (res) {
-    var that = this;
-    console.log('authorize start')
-    if (!res.authSetting['scope.userInfo']) {
-      wx.authorize({
-        scope: 'scope.userInfo',
-        success() {
-          console.log('authorize success')
-          that.openWXSetting()
-        },
-        fail: function () {
-          console.log('authorize fail')
-          resolve(true)
-        }
-      })
-    }
-  },
-  openWXSetting: function (flag) {
-    var that = this;
-    console.log('openWXSetting start')
-    wx.openSetting({
-      success: (res) => {
-        console.log(66)
-        resolve()
-      },
-      fail: (res) => {
-        console.log(res)
-      },
-      complete: (res) => {
-        console.log(0)
-      }
-    })
-  },
   /**
    * 生命周期函数--监听页面显示
    */
   onShow: function (options) {
-    var that = this;
+    console.log('onshow')
+    const that = this;
+    console.log('today')
     if (app.globalData.userInfo) {
-      if (!that.data.records) {
-        wx.showLoading({
-          title: '数据加载中',
-          mask: true
-        })
-        that.getRecords()
-      } else if (app.globalData.refreshToday) {
-        wx.showLoading({
-          title: '数据加载中',
-          mask: true
-        })
-        app.globalData.refreshToday = false;
-        that.getRecords()
+      if (app.globalData.refresh) {
+        console.log(2)
+        // wx.showLoading({
+        //   title: '数据加载中',
+        //   mask: true
+        // })
+        app.getTips()
+          .then(app.convertRecord)
+          .then(app.getRecords)
+          .then(that.handleData)
+          .then(that.setTriggerType)
+      } else {
+        console.log(that.data.records)
+          that.handleData()
+          .then(that.setTriggerType)
       }
-      
+      if (app.globalData.menstruationPeriodFlag) {
+        console.log(3)
+        that.setTriggerType();
+      }
     } else {
-      console.log('没有数据，从头开始')
-      if(wx.getSetting){
-        wx.getSetting({
-          success(res) {
-              if (!res.authSetting['scope.userInfo']) {
-                  wx.authorize({
-                      scope: 'scope.userInfo',
-                      success() {
-                          console.log(222)
-                      }
-                  })
-              }
-          }
-        })
-      }else{
-          //不兼容处理
-          console.log('哭死，不兼容')
-          wx.showModal({
-            title: '提示',
-            content: '当前微信版本过低，无法使用该功能，请升级到最新微信版本后重试。'
-          })
-      }
-      
-      // app.loginWX()
-      //   .then(app.authorize)
-      //   .then(app.openWXSetting)
-      //   .then(() => {
-      //     wx.showLoading({
-      //       title: '数据加载中',
-      //       mask: true
-      //     })
-      //   })
-      //   .then(app.loginWX)
-      //   .then(app.getWXUserInfo)
-      //   .then(app.getBMToken)
-      //   .then(app.updateBMUser)
-      //   .then(app.getBMUserInfo)
-      //   .then(() => {
-      //     that.getRecords()
-      //   })
-      //   .catch(function (res) {
-      //     console.log('catch')
-      //     console.log(res)
-      //     wx.hideLoading()
-      //   })
+      that.regetAuth()
     }
   }
-
 })

@@ -1,0 +1,49 @@
+
+  <view class="guide">
+      <block class="guide_item" wx:for="{{list}}" wx:for-index="index" wx:for-item="item" wx:key="key">
+
+        <view class="guide_item_title {{index == activeIndex ? 'guide_item_title_show' : ''}}" bindtap="toggleShow" data-wepy-params-a="{{index}}">
+          <span class="iconfont icon-guide_icon_heart"/>
+          <text class="title">{{item.title}}</text>
+        </view>
+
+        <view class="guide_item_content {{index == activeIndex ? 'guide_item_content_show' : ''}}">
+
+          <view class="guide_content {{index == activeIndex ? 'guide_content_show' : ''}}">
+
+            <block  wx:if="{{item.img}}">
+              <image class="guide_img" src="{{item.img}}"/>
+            </block>
+
+            <block wx:for="{{item.items}}" wx:for-index="index" wx:for-item="items" wx:key="guide_items_{{index}}">
+              <text class="guide_text">{{items}}</text>
+            </block>
+
+            <block  wx:if="{{item.tip}}">
+              <text class="guide_text_tip">{{item.tip}}</text>
+            </block>
+
+          </view>
+
+        </view>
+
+      </block>
+
+    
+  <view class="record_list">
+    <block  wx:for="{{$record$records}}" wx:key="records_{{index}}">
+      <view wx:if="{{item.dateFlag && $record$date}}" class="date">{{item.date}}</view>
+      <view class="record_list_item {{item.lineTag ? 'line' : ''}}">
+        <text class="time">{{item.time}}</text>
+        <view class="content">
+          <view class="flex-row {{item.classname}}">
+            <text class="type">{{item.type }}\n<text class="number">LH{{item.lh}}</text></text>
+            <image class="item_img" src="{{item.imgUrl}}"/>
+          </view>
+          <view wx:if="{{item.tip && $record$tip}}" class="tip">发生强转弱，可能排卵</view>
+        </view>
+      </view>
+    </block>
+  </view>
+
+  </view>

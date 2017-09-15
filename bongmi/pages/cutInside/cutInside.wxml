@@ -2,7 +2,23 @@
 
 <view class="pages">
    <view class="cropper-wrapper">
-    <template is="weCropper" data="{{...cropperOpt}}"/>
+    <canvas
+      class="cropper"
+      disable-scroll="true"
+      bindtouchstart="touchStart"
+      bindtouchmove="touchMove"
+      bindtouchend="touchEnd"
+      canvas-id="{{cropperOpt.id}}">
+      <cover-image class="cover-img" src="./images/pic_camera_example.png" />
+      <cover-view class="tips">
+        <cover-view>如图所示，请将</cover-view>
+        <cover-view>要拍摄的排卵试纸的参考线C对准虚线</cover-view>
+      </cover-view>
+      <cover-view class="tips2">
+        <cover-view>请尽量在同一环境下录入</cover-view>
+        <cover-view>最好在白色桌面上拍摄，并保持相机水平</cover-view>
+      </cover-view>
+    </canvas>
   </view>
   <view class="cropper-buttons">
     <view class="back" bindtap="takePhoto"><text class="iconfont icon-btn_back"></text> </view>

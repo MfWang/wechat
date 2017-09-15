@@ -4,24 +4,36 @@
     <view class="tips_content">
       <image class="tips_img" src="images/tips.png"></image>
       <image class="bell_img" src="images/bell.png"></image>
-      <swiper
-        class="swiper{{index}}"
-        indicator-dots="{{index == 2 ? true : false}}"
-        autoplay="true"
-        interval="5000"
-        duration="1000"
-        circular="true"
-        indicator-color="#FCD0E2"
-        indicator-active-color="#fff"
-      >
-        <block wx:for="{{guide[index]}}" wx:key="swiper_{{index}}">
-          <swiper-item class="item">
-            <text class="desc">{{item.desc}}</text>
-            <text class="desc2">{{item.desc2}}</text>
-          </swiper-item>
-        </block>
-      </swiper>
-      <button wx:if="{{index == 4}}" class="setting">去设置</button>
+
+      <block wx:if="{{index == 4}}">
+        <swiper
+          wx:if="{{index == 4}}"
+          class="swiper{{index}}"
+          indicator-dots="{{index == 4 ? true : false}}"
+          autoplay="true"
+          interval="5000"
+          duration="1000"
+          circular="true"
+          indicator-color="#FCD0E2"
+          indicator-active-color="#fff"
+        >
+          <block wx:for="{{guide[index]}}" wx:key="swiper_{{index}}">
+            <swiper-item class="item">
+              <text wx:if="{{item.desc}}" class="desc">{{item.desc}}</text>
+              <text wx:if="{{item.desc2}}" class="desc2">{{item.desc2}}</text>
+            </swiper-item>
+          </block>
+        </swiper>
+      </block>
+
+      <block wx:else>
+        <view wx:for="{{guide[index]}}" wx:key="swiper_{{index}}">
+          <text wx:if="{{item.desc}}" class="desc">{{item.desc}}</text>
+          <text wx:if="{{item.desc2}}" class="desc2">{{item.desc2}}</text>
+        </view>
+        <button wx:if="{{index == 0}}" class="setting" bindtap="setting">去设置</button>
+      </block>
+      
     </view>
   </view>
   
@@ -30,14 +42,13 @@
       <text class="time">{{item.time}}</text>
       <view class="content">
         <view class="flex-row {{item.classname}}">
-          <text class="type">{{item.type }}\n<text class="number">LH{{item.detail.lh}}</text></text>
-          <image class="item_img" src="{{item.detail.imgUrl}}"></image>
+          <text class="type">{{item.type }}\n<text class="number">LH{{item.lh}}</text></text>
+          <image class="item_img" src="{{item.imgUrl}}"></image>
         </view>
         <view wx:if="{{item.tip}}" class="tip">发生强转弱，可能排卵</view>
       </view>
     </view>
   </view>
-
-  <button class="photo" bindtap="takePhoto"><text class="iconfont icon-btn_camera"></text>智能记录排卵试纸</button>
+    <text class="photo" bindtap="takePhoto"><text class="iconfont icon-btn_camera"></text>智能记录排卵试纸</text>
     
 </view>

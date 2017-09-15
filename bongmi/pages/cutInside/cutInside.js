@@ -7,6 +7,7 @@ import weCropper from '../dist/weCropper'
 
 const device = wx.getSystemInfoSync()
 const width = device.windowWidth
+// const height = device.windowHeight
 const height = device.windowHeight - width / 750 * 156
 
 Page({

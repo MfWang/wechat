@@ -10,7 +10,8 @@
   position: relative;
   background-image: linear-gradient(-159deg, #F9ADCF 0%, #EE85AF 96%);
   border-radius: 36rpx 36rpx 0 0;
-  padding: 80rpx 60rpx 0 60rpx;
+  padding: 80rpx 60rpx 50rpx 60rpx;
+  height: 100%;
 }
 .tips_img{
   position: absolute;
@@ -48,11 +49,16 @@
   font-size: 24rpx;
   color: #E56CAC;
   margin-top: 40rpx;
+  margin-bottom: 20rpx;
 }
 
+.photo_view{
+  background: red;
+}
 .photo{
   width: 400rpx;
   height: 88rpx;
+  margin: 0 auto;
   border: 2rpx solid #E56CAC;
   border-radius: 100rpx;
   font-size: 28rpx;
@@ -160,14 +166,4 @@
   font-size: 24rpx;
   color: rgba(0,0,0,0.26);
   line-height: 24rpx;
-}
-.tip{
-  height: 40rpx;
-  line-height: 40rpx;
-  padding: 0 30rpx;
-  background-image: linear-gradient(-162deg, #B1B1B1 0%, #9D9D9D 100%);
-  border-radius: 44rpx 34rpx 34rpx 44rpx;
-  font-size: 24rpx;
-  color: #FFFFFF;
-  display: inline-block;
 }
