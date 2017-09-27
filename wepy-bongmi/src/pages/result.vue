@@ -181,8 +181,6 @@
 <script>
   import wepy from 'wepy'
   import 'wepy-async-function'
-  import testMixin from '../mixins/test'
-  import commonMixin from '../mixins/common'
 
   export default class Result extends wepy.page {
     config = {
@@ -192,7 +190,6 @@
       backgroundColor: 'black'
     }
 
-    mixins = [testMixin, commonMixin]
     data = {
       result: null,
       resultIndex: -1,

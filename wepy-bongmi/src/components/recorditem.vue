@@ -14,7 +14,9 @@
     padding: 60rpx 40rpx 0 30rpx;
   }
   .record_list_item{
-    width: 680rpx;
+    // width: 680rpx;
+    display: -webkit-box;
+    display: -webkit-flex;
     display: flex;
     justify-content: space-between;
     align-items: top;
@@ -49,10 +51,13 @@
   }
   .content{
     width: 580rpx;
+    display: inline-block;
   }
   .flex-row{
     height: 116rpx;
     padding: 0 24rpx 0 30rpx;
+    display: -webkit-box;
+    display: -webkit-flex;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -165,16 +170,6 @@
     }
 
     onLoad () {
-     console.log(this.$parent.$parent.globalData)
-     console.log(this.theme)
-     console.log(this.date)
-     console.log(this.tip)
-    //  if(this.theme == 'today') {
-    //    this.records = this.$parent.$parent.globalData.recordsTodayShow
-    //  } else {
-    //    this.records = this.$parent.$parent.globalData.recordsAll.ovulationTestResultList
-    //  }
-    //  this.$apply();
     }
   }
 </script>

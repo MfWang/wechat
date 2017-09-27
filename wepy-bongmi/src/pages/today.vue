@@ -77,99 +77,6 @@
     font-size: 40rpx;
     margin-right: 20rpx;
   }
-  .record_list{
-    padding: 0 40rpx 0 30rpx;
-  }
-  .record_list_item{
-    width: 680rpx;
-    display: flex;
-    justify-content: space-between;
-    align-items: top;
-    position: relative;
-    margin: 40rpx 0;
-  }
-  .record_list_item:before{
-    content: "";
-    width: 10rpx;
-    height: 10rpx;
-    border-radius: 100%;
-    opacity: 0.5;
-    background: #C4C4C4;
-    position: absolute;
-    top: 58rpx;
-    left: 0;
-    margin-top: -5rpx;
-  }
-  .record_list_item:after{
-    content: '';
-    width: 2rpx;
-    height: 100%;
-    opacity: 0.3;
-    background: #A0A0A0;
-    border-radius: 8rpx;
-    position: absolute;
-    left: 5rpx;
-    top: calc(~'58rpx + 15rpx');
-  }
-  .record_list .record_list_item:last-child:after{
-    display: none;
-  }
-  .content{
-    width: 580rpx;
-  }
-  .flex-row{
-    height: 116rpx;
-    padding: 0 24rpx 0 30rpx;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: #FEFEFE;
-    border: 1rpx solid rgba(0,0,0,0.12);
-    border-radius: 4rpx;
-    position: relative;
-  }
-  .flex-row:before{
-    content: '';
-    width: 10rpx;
-    height: 116rpx;
-    position: absolute;
-    top: -1rpx;
-    left: -1rpx;
-    border-radius: 4rpx 0 0 4rpx;
-    border: 1rpx solid rgba(0,0,0,0.12);
-  }
-  .low:before{
-    background: #F7D2E5;
-  }
-  .peak:before{
-    background: #D5D5D5;
-  }
-  .high:before{
-    background: #E76FAD;
-  }
-  .time{
-    font-size: 22rpx;
-    color: rgba(0,0,0,0.33);
-    padding-left: 14rpx;
-    line-height: 116rpx;
-  }
-  .item_img{
-    width: 428rpx;
-    height: 68rpx;
-  }
-  .type{
-    font-size: 24rpx;
-    color: rgba(0,0,0,0.54);
-    line-height: 24rpx;
-  }
-  .number{
-    display: block;
-    margin-top: 12rpx;
-    font-size: 24rpx;
-    color: rgba(0,0,0,0.26);
-    line-height: 24rpx;
-  }
-
 </style>
 <template>
   <view class="today">
@@ -178,12 +85,9 @@
       <view class="tips_content">
         <image class="tips_img" src="../images/tips.png"></image>
         <image class="bell_img" src="../images/bell.png"></image>
-
-        <block wx:if="{{index == 4}}">
+        <block wx:if="{{index == 5}}">
           <swiper
-            wx:if="{{index == 4}}"
-            class="swiper{{index}}"
-            indicator-dots="{{index == 4 ? true : false}}"
+            indicator-dots="true"
             autoplay="true"
             interval="5000"
             duration="1000"
@@ -191,12 +95,12 @@
             indicator-color="#FCD0E2"
             indicator-active-color="#fff"
           >
-            <block wx:for="{{guide[index]}}" wx:key="swiper_{{index}}">
+            <repeat for="{{guide[index]}}">
               <swiper-item class="item">
                 <text wx:if="{{item.desc}}" class="desc">{{item.desc}}</text>
                 <text wx:if="{{item.desc2}}" class="desc2">{{item.desc2}}</text>
               </swiper-item>
-            </block>
+            </repeat>
           </swiper>
         </block>
 
@@ -211,24 +115,11 @@
       </view>
     </view>
 
-    <view class="record_list" wx:if="{{flag}}">
-      <view class="record_list_item" wx:for="{{records}}" wx:key="list_{{index}}">
-        <text class="time">{{item.time}}</text>
-        <view class="content">
-          <view class="flex-row {{item.classname}}">
-            <text class="type">{{item.type }}\n<text class="number">LH{{item.lh}}</text></text>
-            <image class="item_img" src="{{item.imgUrl}}"></image>
-          </view>
-          <view wx:if="{{item.tip}}" class="tip">发生强转弱，可能排卵</view>
-        </view>
-      </view>
-    </view>
-
     <record
       :records.sync="records"
-      theme="today"
-      date="false"
-      tip="false"
+      :theme.sync="today"
+      :date.sync="date"
+      :tip.sync="tip"
     />
 
     <button class="photo" @tap="takePhoto"><text class="iconfont icon-btn_camera"></text>智能记录排卵试纸</button>
@@ -239,16 +130,12 @@
 <script>
   import wepy from 'wepy'
   import 'wepy-async-function'
-  import testMixin from '../mixins/test'
-  import commonMixin from '../mixins/common'
   import RecordItem from '../components/recorditem'
 
   export default class Guide extends wepy.page {
     config = {
       navigationBarTitleText: '今日信息'
     }
-
-    mixins = [testMixin, commonMixin]
 
     components = {
       record: RecordItem
@@ -257,26 +144,22 @@
       flag: false,
       index: 0,
       guide: [
-        [
-          {
-            "desc": "您还没有设置过周期长度，设置周期长度后，小助手可以指导您使用排卵试纸的时间。"
-          }
-        ],
-        [
-          {
-            "desc": "您的周期为X天，请在周期第N天开始使用排卵试纸"
-          }
-        ],
-        [
-          {
-            "desc": "您的周期过短，建议您咨询一下专科医生，或者在经期结束之后，即刻开始坚持记录排卵试纸情况～"
-          }
-        ],
-        [
-          {
-            "desc": "您的周期较长，建议您咨询一下专科医生，或者您预计下次经期来潮之前20天开始记录排卵试纸情况～"
-          }
-        ],
+        {
+          "desc": "您还没有设置过周期长度，设置周期长度后，小助手可以指导您使用排卵试纸的时间。"
+        },
+        {
+          "desc": "您的周期为X天，请在周期第N天开始使用排卵试纸"
+        },
+        {
+          "desc": "您的周期过短，建议您咨询一下专科医生，或者在经期结束之后，即刻开始坚持记录排卵试纸情况～"
+        },
+        {
+          "desc": "您的周期较长，建议您咨询一下专科医生，或者您预计下次经期来潮之前20天开始记录排卵试纸情况～"
+        },
+        {
+          "desc": "在一个周期内出现强阳转弱阳，说明排卵已经发生，5个小时内的爱爱也还是有很高的中奖几率的！",
+          "desc2": "您如果不能确定身体是否完全健康，可以坚持继续测量排卵试纸。因为有一些疾病可能会造成一个周期内出现多次小的强阳弱阳的交替变化，如果您发现这种情况，也不用胡思乱想，及时去看一下医生就好～"
+        },
         [
           {
             "desc": "在一个周期里，出现强阳之后，需要增加测量频率，最好能保证四个小时测量一次。",
@@ -287,14 +170,11 @@
             "desc2": ""
           }
         ],
-        [
-          {
-            "desc": "在一个周期内出现强阳转弱阳，说明排卵已经发生，5个小时内的爱爱也还是有很高的中奖几率的！",
-            "desc2": "您如果不能确定身体是否完全健康，可以坚持继续测量排卵试纸。因为有一些疾病可能会造成一个周期内出现多次小的强阳弱阳的交替变化，如果您发现这种情况，也不用胡思乱想，及时去看一下医生就好～"
-          }
-        ],
       ],
-      records: null
+      records: null,
+      today: 'today',
+      date: false,
+      tip: false
     }
 
     methods = {
@@ -302,10 +182,13 @@
         const self = this
         const parent = self.$parent
         await parent.takePhoto()
+        wx.showLoading({
+          title: '照片上传中',
+          mask: true
+        })
         await parent.getQiniuToken()
-        const picData = await parent.uploadPhoto(1) //1:原图 2:裁剪图
-        parent.globalData.pictureOnline = picData.key
-        console.log(parent.globalData)
+        await parent.uploadPhoto() //1:原图 2:裁剪图
+        wx.hideLoading()
         wx.redirectTo({
           url: '/pages/result',
           success: function (res) {
@@ -343,7 +226,7 @@
           await parent.getTips()
           await parent.convertRecord()
           await parent.getRecords()
-          const records = await parent.getTodayList()
+          await parent.getTodayList()
           const triggerType = await parent.setTriggerType()
           const guide = self.guide
           const menstruationPeriod = globalData.bmUser.menstruationPeriod
@@ -354,24 +237,31 @@
               }
           }
           self.guide = guide
-          self.records = records
+          self.records = globalData.recordsTodayShow
+          self.index = triggerType
+          self.$apply();
+          wx.hideLoading()
+        } else if (globalData.recordsTodayShow && !self.records) {
+          wx.showLoading({
+            title: '数据加载中',
+            mask: true
+          })
+          await parent.getTodayList()
+          const triggerType = await parent.setTriggerType()
+          const guide = self.guide
+          const menstruationPeriod = globalData.bmUser.menstruationPeriod
+          if (triggerType == 1) {
+            const period = [6, 6, 7, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
+            guide[1] = {
+                "desc": `您的周期为${menstruationPeriod}天，请在周期第${period[menstruationPeriod - 21]}天开始使用排卵试纸`
+              }
+          }
+          self.guide = guide
+          self.records = globalData.recordsTodayShow
           self.index = triggerType
           self.$apply();
           wx.hideLoading()
         } else {
-          // const records = await parent.getTodayList()
-          // const triggerType = await parent.setTriggerType()
-          // const guide = self.data.guide
-          // if (triggerType == 1) {
-          //   const period = [6, 6, 7, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
-          //   guide[1] = {
-          //       "desc": `您的周期为${menstruationPeriod}天，请在周期第${period[menstruationPeriod - 21]}天开始使用排卵试纸`
-          //     }
-          // }
-          // self.guide = guide
-          // self.records = records
-          // self.index = triggerType
-          // self.$apply();
         }
 
         if (globalData.menstruationPeriodFlag) {
@@ -406,7 +296,7 @@
             await parent.getTips()
             await parent.convertRecord()
             await parent.getRecords()
-            const records = await parent.getTodayList()
+            await parent.getTodayList()
             const triggerType = await parent.setTriggerType()
             const guide = self.guide
             const menstruationPeriod = globalData.bmUser.menstruationPeriod
@@ -417,7 +307,7 @@
                 }
             }
             self.guide = guide
-            self.records = records
+            self.records = globalData.recordsTodayShow
             self.index = triggerType
             self.$apply();
             wx.hideLoading()
@@ -434,7 +324,7 @@
           await parent.getTips()
           await parent.convertRecord()
           await parent.getRecords()
-          const records = await parent.getTodayList()
+          await parent.getTodayList()
           const triggerType = await parent.setTriggerType()
           const guide = self.guide
           const menstruationPeriod = globalData.bmUser.menstruationPeriod
@@ -445,7 +335,7 @@
               }
           }
           self.guide = guide
-          self.records = records
+          self.records = globalData.recordsTodayShow
           self.index = triggerType
           self.$apply();
           wx.hideLoading()

@@ -47,10 +47,9 @@
     config = {
       pages: [
         'pages/today',
-        'pages/result',
-        'pages/guide',
         'pages/record',
-        'pages/index'
+        'pages/guide',
+        'pages/result'
       ],
       tabBar: {
         "color": "#A0A0A0",
@@ -391,7 +390,7 @@
         const timestamp = Math.floor(date.getTime() / 1000) - (h * 3600 + m * 60 + s)
         const records = self.globalData.recordsAll.ovulationTestResultList.filter((item) => (item.timestamp >= timestamp))
         self.globalData.recordsTodayShow = records
-        resolve(records)
+        resolve()
       })
     }
 
@@ -400,10 +399,11 @@
       let triggerType = ''
       return new Promise((resolve, reject) => {
         console.log('setTriggerType start')
+        const menstruationPeriod = globalData.bmUser.menstruationPeriod
         triggerType = () => {
-            switch (globalData.recordsAll.triggerType) {
+            const triggerType = globalData.recordsAll.triggerType
+            switch (triggerType) {
             case 1:
-              const menstruationPeriod = globalData.bmUser.menstruationPeriod
               if (menstruationPeriod) {
                 if (menstruationPeriod < 21) {
                   return 2
@@ -415,8 +415,8 @@
               } else {
                 return 0
               }
-            case 2: return 4
-            case 3: return 5
+            case 2: return 5
+            case 3: return 4
           }
         }
         console.log('setTriggerType end')
@@ -434,7 +434,6 @@
             sourceType: ['camera'],
             success: function (res) {
               self.globalData.pictureLocal = res.tempFilePaths[0]
-              // self.getQiniuToken(1)
               console.log('takePhoto end')
               resolve()
             }
@@ -465,7 +464,7 @@
       })
     }
 
-    async uploadPhoto (pictureType) {
+    async uploadPhoto () {
       const self = this
       const globalData = self.globalData
       const bmUser = globalData.bmUser
@@ -473,7 +472,8 @@
         console.log('uploadPhoto start')
         wx.uploadFile({
           url: `${globalData.qiniuUploadUrl}`,
-          filePath: pictureType == 1 ? globalData.pictureLocal : globalData.tailorLocal,
+          filePath: globalData.pictureLocal,
+          // filePath: pictureType == 1 ? globalData.pictureLocal : globalData.tailorLocal,
           name: 'file',
           formData: {
             token: globalData.uploadInfo.uploadToken,
@@ -481,9 +481,9 @@
           },
           success: function (res) {
             const data = JSON.parse(res.data);
-            console.log(data)
+            globalData.pictureOnline = data.key
             console.log('uploadPhoto end')
-            resolve(data)
+            resolve()
             // self.globalData.tailorOnline = data.key;
             // wx.redirectTo({
             //   url: '/pages/result/result',

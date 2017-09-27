@@ -1,0 +1,22 @@
+
+  <view class="container">
+    <view class="group">
+      <picker bindchange="bindPickerChange" value="{{index}}" range="{{array}}">
+        <view class="select">{{array[index]}}</view>
+      </picker>
+      <text  wx:if="{{index == 0}}" class="command_prev">[fresher@dict ~]$ ls | grep</text>
+      <input class="input" placeholder="{{index == 0 ? '输入命令' : '输入语义'}}"/>
+    </view>
+    <block wx:for="{{results}}" wx:for-index="index" wx:for-item="item" wx:key="{{index}}">
+      <view class="result">
+        <view class="abb">{{item.abb}}</view>
+        <view class="benelux">{{item.Benelux}}</view>
+        <view class="mean">{{item.mean}}</view>
+        <view class="command">
+          <block wx:for="{{item.lists}}" wx:for-index="index" wx:for-item="item" wx:key="key">
+            <view class="item"><text class="command_item">{{item}}</text></view>
+          </block>
+        </view>
+      </view>
+    </block>
+  </view>

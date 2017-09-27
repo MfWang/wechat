@@ -5,10 +5,9 @@
       <view class="tips_content">
         <image class="tips_img" src="../images/tips.png"/>
         <image class="bell_img" src="../images/bell.png"/>
-
-        <block  wx:if="{{index == 4}}">
-          <swiper wx:if="{{index == 4}}" class="swiper{{index}}" indicator-dots="{{index == 4 ? true : false}}" autoplay="true" interval="5000" duration="1000" circular="true" indicator-color="#FCD0E2" indicator-active-color="#fff">
-            <block wx:for="{{guide[index]}}" wx:key="swiper_{{index}}">
+        <block  wx:if="{{index == 5}}">
+          <swiper indicator-dots="true" autoplay="true" interval="5000" duration="1000" circular="true" indicator-color="#FCD0E2" indicator-active-color="#fff">
+            <block wx:for="{{guide[index]}}" wx:for-index="index" wx:for-item="item" wx:key="key">
               <swiper-item class="item">
                 <text wx:if="{{item.desc}}" class="desc">{{item.desc}}</text>
                 <text wx:if="{{item.desc2}}" class="desc2">{{item.desc2}}</text>
@@ -25,19 +24,6 @@
           <button wx:if="{{index == 0}}" class="setting" bindtap="setting">去设置</button>
         </block>
 
-      </view>
-    </view>
-
-    <view class="record_list" wx:if="{{flag}}">
-      <view class="record_list_item" wx:for="{{records}}" wx:key="list_{{index}}">
-        <text class="time">{{item.time}}</text>
-        <view class="content">
-          <view class="flex-row {{item.classname}}">
-            <text class="type">{{item.type }}\n<text class="number">LH{{item.lh}}</text></text>
-            <image class="item_img" src="{{item.imgUrl}}"/>
-          </view>
-          <view wx:if="{{item.tip}}" class="tip">发生强转弱，可能排卵</view>
-        </view>
       </view>
     </view>
 

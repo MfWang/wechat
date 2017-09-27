@@ -84,8 +84,8 @@
 </style>
 <template>
   <view class="guide">
-      <repeat for="{{list}}" item="item" index="index" class="guide_item">
-
+    <repeat for="{{list}}" item="item" index="index" >
+      <view class="guide_item">
         <view
           class="guide_item_title {{index == activeIndex ? 'guide_item_title_show' : ''}}"
           @tap="toggleShow({{index}})">
@@ -112,29 +112,17 @@
           </view>
 
         </view>
-
-      </repeat>
-
-    <record
-      :records.sync="records"
-      theme="today"
-      date="false"
-      tip="false"
-    />
+      </view>
+    </repeat>
   </view>
 </template>
 
 <script>
   import wepy from 'wepy'
-  import RecordItem from '../components/recorditem'
 
   export default class Guide extends wepy.page {
     config = {
       navigationBarTitleText: '使用指导'
-    }
-
-    components = {
-      record: RecordItem
     }
 
     data = {
@@ -172,8 +160,7 @@
           ]
         }
       ],
-      activeIndex: -1,
-      records: []
+      activeIndex: -1
     }
 
     methods = {
@@ -181,10 +168,6 @@
         const self = this;
         self.activeIndex = (self.activeIndex == index) ? -1 : index
       }
-    }
-
-    onShow() {
-      this.records = this.$parent.globalData.recordsTodayShow
     }
   }
 </script>
