@@ -1,0 +1,106 @@
+<style lang="less">
+  .container{
+    padding: 0 10rpx;
+  }
+</style>
+<template>
+  <view class="container">
+    你好
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import 'wepy-async-function'
+
+  export default class Bluetooth extends wepy.page {
+    config = {
+      navigationBarTitleText: '蓝牙'
+    }
+
+    data = {
+    }
+    methods = {
+    }
+
+    openBluetoothAdapter() {
+      return new Promise(function (resolve, reject) {
+        console.log('openBluetoothAdapter start')
+        wepy.openBluetoothAdapter({
+          success: function (res) {
+            console.log('openBluetoothAdapter success')
+            wepy.showToast({
+              title: '初始化蓝牙适配器成功',
+              duration: 2000
+            })
+            console.log(res)
+            resolve('true')
+          },
+          fail: function (res) {
+            console.log('openBluetoothAdapter fail')
+            console.log(res)
+            resolve('false')
+          }
+        })
+      })
+    }
+
+    getBluetoothAdapterState() {
+      return new Promise(function (resolve, reject) {
+        console.log('getBluetoothAdapterState start')
+        wepy.getBluetoothAdapterState({
+          success: function (res) {
+            console.log('getBluetoothAdapterState success')
+            console.log(res)
+            resolve('true')
+          },
+          fail: function (res) {
+            console.log('getBluetoothAdapterState fail')
+            console.log(res)
+            resolve('false')
+          }
+        })
+      })
+    }
+
+    showModal() {
+      return new Promise(function (resolve, reject) {
+        wepy.showModal({
+          title: '蓝牙未开启',
+          content: '请开启蓝牙连接',
+          confirmColor: '#E56CAC',
+          success: function (res) {
+            if (res.confirm) {
+              resolve('true')
+            } else if (res.cancel) {
+              resolve('false')
+            }
+          }
+        })
+      })
+    }
+
+    onBluetoothAdapterStateChange() {
+      return new Promise(function (resolve, reject) {
+        console.log('onBluetoothAdapterStateChange start')
+        wepy.onBluetoothAdapterStateChange(function (res) {
+          console.log(`adapterState changed, now is`, res)
+          resolve('true')
+        })
+      })
+    }
+
+    async onShow() {
+      const that = this
+      const flag = await that.openBluetoothAdapter()
+      if (flag === 'false') {
+        const openFlag = await that.showModal()
+        if (openFlag === 'true') {
+          await that.onBluetoothAdapterStateChange()
+        }
+      } else {
+        await that.getBluetoothAdapterState()
+      }
+    }
+  }
+</script>

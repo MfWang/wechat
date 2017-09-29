@@ -1,0 +1,314 @@
+<style lang="less">
+  .container{
+    padding: 0 10rpx;
+  }
+</style>
+<template>
+  <view class="container">
+    你好
+    <view>{{userInfo.nickName}}</view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import 'wepy-async-function'
+
+  export default class Payment extends wepy.page {
+    config = {
+      navigationBarTitleText: '支付'
+    }
+
+    data = {
+      appid: 'wx7e71d8c807fc0f58',
+      secret: 'a76c9f9638f02c9b19d048a6fccefca1',
+      index: -1,
+      userInfo: null,
+      code: null,
+      openInfo: null
+    }
+    methods = {
+    }
+
+    tryAuthAgain () {
+      return new Promise(function (resolve, reject) {
+        console.log('tryAuthAgain start')
+        wepy.showModal({
+          title: '是否要打开设置页面重新授权',
+          content: '需要获取您的公开信息(昵称、头像等)',
+          confirmColor: '#E56CAC',
+          success: function (res) {
+            if (res.confirm) {
+              console.log('用户点击确定')
+              wepy.openSetting({
+                success: (res) => {
+                  console.log('tryAuthAgain success')
+                  resolve('true')
+                },
+                fail: (res) => {
+                  resolve('false')
+                },
+                complete: (res) => {
+                }
+              })
+            } else if (res.cancel) {
+              console.log('用户点击取消')
+              resolve('false')
+            }
+          }
+        })
+      })
+    }
+    getUserInfo() {
+      const that = this
+      return new Promise((resolve, reject) => {
+        console.log('getWXUserInfo start')
+        wepy.getUserInfo({
+          success (res) {
+            that.userInfo = res.userInfo
+            that.$apply()
+            console.log('getWXUserInfo success')
+            resolve('true')
+          },
+          fail (res) {
+            console.log('getWXUserInfo fail')
+            resolve('false')
+          }
+        })
+      })
+    }
+    loginWX () {
+      const that = this
+      return new Promise(function (resolve, reject) {
+        console.log('login start')
+        wepy.login({
+          success: res => {
+            if (res.code) {
+              console.log('login success')
+              // 发送 res.code 到后台换取 openId, sessionKey, unionId
+              console.log(res.code)
+              that.code = res.code
+              that.$apply()
+              resolve('true')
+            } else {
+              console.log('login fail')
+              wepy.showModal({
+                title: '获取用户登录态失败',
+                content: '重新登录？',
+                success: function (res) {
+                  if (res.confirm) {
+                    that.loginWX()
+                  } else if (res.cancel) {
+                    resolve('false')
+                  }
+                }
+              })
+            }
+          }
+        })
+      })
+    }
+    getOpenId () {
+      const that = this
+      return new Promise(function (resolve, reject) {
+        console.log('getOpenId start')
+        wepy.request({
+          url: 'https://api.weixin.qq.com/sns/jscode2session',
+          data: {
+            appid: that.appid,
+            secret: that.secret,
+            js_code: that.code,
+            grant_type: 'authorization_code'
+          },
+          success: function (res) {
+            console.log('getOpenId success')
+            console.log(res)
+            that.openInfo = res.data
+            that.$apply()
+            resolve('true')
+          },
+          fail: function () {
+            console.log('getOpenId fail')
+            resolve('false')
+          }
+        })
+      })
+    }
+    // 生成商户订单
+    generateOrder () {
+      var that = this
+      // 统一支付签名
+      // appid
+      var appid = that.appid
+      // 商户名
+      var body = ''
+      // 商户号
+      var mchId = ''
+      // 随机字符串，不长于32位。
+      var nonceStr = that.randomString()
+      // 通知地址
+      var notifyUrl = ''
+      // ip
+      var spbillCreateIp = '替换为自己的终端IP'
+      var totalFee = 100
+      var tradeType = 'JSAPI'
+      const key = that.openInfo.key
+      var unifiedPayment = `
+        appid=${appid}&body${body}&mch_id${mchId}
+        &nonce_str=${nonceStr}¬ify_url=${notifyUrl}
+        &openid=${that.openInfo.openid}&out_trade_no=${that.openInfo.paySn}
+        &spbill_create_ip=${spbillCreateIp}&total_fee=${totalFee}
+        &trade_type=${tradeType}&key=${key}
+      `
+      var sign = MD5.MD5(unifiedPayment).toUpperCase()
+      console.log(sign)
+
+      // 封装统一支付xml参数
+      var formData = `
+        <xml>
+          <appid>${appid}</appid>
+          <body>${body}</body>
+          <mch_id>${mchId}</mch_id>
+          <nonce_str>${nonceStr}</nonce_str>
+          <notify_url>${notifyUrl}</notify_url>
+          <openid>${that.openInfo.openid}</openid>
+          <out_trade_no>${that.openInfo.paySn}</out_trade_no>
+          <spbill_create_ip>${spbillCreateIp}</spbill_create_ip>
+          <total_fee>${totalFee}</total_fee>
+          <trade_type>${tradeType}</trade_type>
+          <sign>${sign}</sign>
+        </xml>
+      `
+      wepy.request({
+        url: 'https://api.mch.weixin.qq.com/pay/unifiedorder',
+        method: 'POST',
+        head: 'application/x-www-form-urlencoded',
+        data: formData, // 设置请求的 header
+        success: function (res) {
+          console.log(res.data)
+          let resultCode = that.getXMLNodeValue('result_code', res.data.toString('utf-8'))
+          resultCode = resultCode.split('[')[2].split(']')[0]
+          if (resultCode === 'FAIL') {
+            var errCodeDes = that.getXMLNodeValue('err_code_des', res.data.toString('utf-8'))
+            var errDes = errCodeDes.split('[')[2].split(']')[0]
+            wepy.navigateBack({
+              delta: 1, // 回退前 delta(默认为1) 页面
+              success: function (res) {
+                wepy.showToast({
+                  title: errDes,
+                  icon: 'success',
+                  duration: 2000
+                })
+              }
+            })
+          } else {
+            // 发起支付
+            var prepayId = that.getXMLNodeValue('prepay_id', res.data.toString('utf-8'))
+            var tmp = prepayId.split('[')
+            var tmp1 = tmp[2].split(']')
+            // 签名
+            var key = that.openInfo.key
+            var appId = that.appid
+            var timeStamp = that.createTimeStamp()
+            var nonceStr = that.randomString()
+            var stringSignTemp = `
+              appId=${appId}&nonceStr=${nonceStr}&package=prepay_id=${tmp1[0]}
+              &signType=MD5&timeStamp=${timeStamp}&key=${key}
+            `
+            var sign = MD5.MD5(stringSignTemp).toUpperCase()
+            console.log(sign)
+            const param = {
+              'timeStamp': timeStamp,
+              'package': 'prepay_id=' + tmp1[0],
+              'paySign': sign,
+              'signType': 'MD5',
+              'nonceStr': nonceStr
+            }
+            that.pay(param)
+          }
+        }
+      })
+    }
+    // 发起支付
+    pay (param) {
+      console.log('pay start')
+      console.log(param)
+      wepy.requestPayment({
+        timeStamp: param.timeStamp,
+        nonceStr: param.nonceStr,
+        package: param.package,
+        signType: param.signType,
+        paySign: param.paySign,
+        success: function (res) {
+          // success
+          console.log(res)
+          wepy.navigateBack({
+            delta: 1, // 回退前 delta(默认为1) 页面
+            success: function (res) {
+              wepy.showToast({
+                title: '支付成功',
+                icon: 'success',
+                duration: 2000
+              })
+            },
+            fail: function () {
+              // fail
+            },
+            complete: function () {
+              // complete
+            }
+          })
+        },
+        fail: function () {
+          // fail
+          console.log('支付失败')
+        },
+        complete: function () {
+          // complete
+          console.log('pay complete')
+        }
+      })
+    }
+    /* 随机数 */
+    randomString () {
+      // 默认去掉了容易混淆的字符oOLl,9gq,Vv,Uu,I1
+      var chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678'
+      var maxPos = chars.length
+      var pwd = ''
+      for (var i = 0; i < 32; i++) {
+        pwd += chars.charAt(Math.floor(Math.random() * maxPos))
+      }
+      return pwd
+    }
+    // 时间戳
+    createTimeStamp () {
+      return parseInt(new Date().getTime() / 1000) + ''
+    }
+
+    async onShow() {
+      const that = this
+      if (that.userInfo) {
+        console.log('已经授权过啦，并且用户信息也有了~')
+      } else {
+        console.log('我也不知道有没有授权，反正还没有用户数据')
+        const getUserInfoFlag = await that.getUserInfo()
+        if (getUserInfoFlag === 'true') {
+          console.log('getUserInfoFlag === true')
+          await that.loginWX()
+          await that.getOpenId()
+        } else {
+          console.log('getUserInfoFlag ===false')
+          const tryAuthAgainFlag = await that.tryAuthAgain()
+          if (tryAuthAgainFlag === 'true') {
+            console.log('tryAuthAgainFlag === true')
+            await that.getUserInfo()
+            await that.loginWX()
+            await that.getOpenId()
+          } else {
+            console.log('tryAuthAgainFlag === false')
+          }
+        }
+      }
+    }
+  }
+</script>

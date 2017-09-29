@@ -1,7 +1,9 @@
-const path = require('path');
+const path = require('path')
 var prod = process.env.NODE_ENV === 'production'
 
 module.exports = {
+  output: 'dist',
+  source: 'src',
   wpyExt: '.wpy',
   build: {
     web: {
@@ -15,9 +17,9 @@ module.exports = {
     less: {
       compress: true
     },
-    /*sass: {
+    /* sass: {
       outputStyle: 'compressed'
-    },*/
+    }, */
     babel: {
       sourceMap: true,
       presets: [
@@ -25,6 +27,7 @@ module.exports = {
         'stage-1'
       ],
       plugins: [
+        // 'transform-runtime',
         'transform-decorators-legacy',
         'transform-export-extensions',
         'syntax-export-extensions'
@@ -36,10 +39,9 @@ module.exports = {
 }
 
 if (prod) {
-
-  delete module.exports.compilers.babel.sourcesMap;
+  delete module.exports.compilers.babel.sourcesMap
   // 压缩sass
-  // module.exports.compilers['sass'] = {outputStyle: 'compressed'}
+  module.exports.compilers['sass'] = {outputStyle: 'compressed'}
 
   // 压缩less
   module.exports.compilers['less'] = {compress: true}

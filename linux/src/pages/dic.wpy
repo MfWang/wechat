@@ -140,7 +140,6 @@
     }
     methods = {
       bindPickerChange: function (e) {
-        console.log(e.detail.value)
         this.index = e.detail.value
       }
     }

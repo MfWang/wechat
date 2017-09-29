@@ -1,0 +1,118 @@
+<style lang="less">
+  .container{
+    padding: 0 10rpx;
+  }
+  .group{
+    width: calc(~'100% - 20rpx');
+    border-top: 1rpx solid #E6E6FA;
+    border-bottom: 1rpx solid #E6E6FA;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+  }
+  .select{
+    width: 80rpx;
+    height: 50rpx;
+    font-size: 24rpx;
+    line-height: 50rpx;
+    position: relative;
+    margin-right: 40rpx;
+  }
+  .select:after{
+    content: '';
+    position: absolute;
+    left: 80rpx;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-left: 10rpx solid transparent;
+    border-right: 10rpx solid transparent;
+    border-top: 15rpx solid #000;
+  }
+  .command_prev{
+    width: 300rpx;
+    font-size: 24rpx;
+    line-height: 50rpx;
+  }
+  .input{
+    height: 50rpx;
+    font-size: 24rpx;
+    line-height: 50rpx;
+    border: none;
+  }
+  .result{
+    width: calc(~'100% - 20rpx');
+    margin: 20rpx auto;
+    background: #E6E6FA;
+    border-radius: 10rpx;
+    padding: 10rpx;
+  }
+  .abb{
+    font-size: 40rpx;
+    font-weight: bold;
+    border-bottom: 1rpx solid #fff;
+  }
+  .benelux{
+    font-size: 30rpx;
+    line-height: 50rpx;
+    margin: 10rpx 0;
+  }
+  .mean{
+    font-size: 30rpx;
+    line-height: 40rpx;
+    margin: 10rpx 0;
+  }
+  .command{
+
+  }
+  .item{
+    margin-bottom: 20rpx;
+  }
+  .command_item{
+    font-size: 24rpx;
+    line-height: 40rpx;
+    background: #FAFAD2;
+    border-radius: 10rpx;
+    padding: 10rpx;
+  }
+</style>
+<template>
+  <view class="container">
+    你好
+      <button @tap="toast" size="mini">第三方组件</button>
+    <toast />
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import Toast from 'wepy-com-toast'
+
+  export default class Component extends wepy.page {
+    config = {
+      navigationBarTitleText: '组件'
+    }
+    components = {
+      toast: Toast
+    }
+
+    data = {
+    }
+    methods = {
+      toast () {
+        let promise = this.$invoke('toast', 'show', {
+          title: '测试 toast',
+          img: 'https://raw.githubusercontent.com/kiinlam/wetoast/master/images/star.png'
+        })
+
+        promise.then((d) => {
+          console.log('toast done')
+        })
+      }
+    }
+
+    onLoad() {
+    }
+  }
+</script>

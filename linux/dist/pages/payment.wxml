@@ -1,0 +1,5 @@
+
+  <view class="container">
+    你好
+    <view>{{userInfo.nickName}}</view>
+  </view>
