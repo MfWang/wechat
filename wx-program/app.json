@@ -1,0 +1,50 @@
+{
+  "pages":[
+    "pages/index/index",
+    "pages/pay/pay",
+    "pages/account/account",
+    "pages/logs/logs"
+  ],
+  "window":{
+    "navigationBarBackgroundColor": "#000",
+    "navigationBarTitleText": "微信小程序",
+    "navigationBarTextStyle":"white",
+    "navigationStyle": "custom",
+    "backgroundColor": "#f00",
+    "backgroundTextStyle":"dark",
+    "backgroundColorTop": "#ff0",
+    "backgroundColorBottom": "#0ff",
+    "enablePullDownRefresh": true,
+    "onReachBottomDistance": 50
+  },
+  "tabBar": {
+    "color": "#fff",
+    "selectedColor": "#04c60f",
+    "backgroundColor": "#000",
+    "borderStyle": "white",
+    "position": "bottom",
+    "list": [{
+      "pagePath": "pages/index/index",
+      "text": "首页",
+      "iconPath": "images/tabbar/home.png",
+      "selectedIconPath": "images/tabbar/home_selected.png"
+    }, {
+      "pagePath": "pages/pay/pay",
+      "text": "支付",
+      "iconPath": "images/tabbar/pay.png",
+      "selectedIconPath": "images/tabbar/pay_selected.png"
+    }, {
+      "pagePath": "pages/account/account",
+      "text": "日志",
+      "iconPath": "images/tabbar/account.png",
+      "selectedIconPath": "images/tabbar/account_selected.png"
+    }]
+  },
+  "networkTimeout": {
+    "request": 60000,
+    "connectSocket": 60000,
+    "uploadFile": 60000,
+    "downloadFile": 60000
+  },
+  "debug": true
+}
